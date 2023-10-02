@@ -1,0 +1,139 @@
+/*================================================================================
+	Item Name: Stack - Responsive Admin Theme
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+.main-menu.menu-dark .navigation .navigation-header span {
+    font-weight: bold;
+}
+.main-menu.menu-dark .navigation .navigation-header {
+    padding: 24px 20px;
+}
+.card-header {
+    padding: 1rem;
+}
+.card-header .heading-elements {
+    top: 10px;
+    right: 12px;
+}
+.content-header .filters {
+    display: flex;
+}
+.content-header .filters select {
+    width: 100%;
+}
+.custom-select:disabled {
+    color: #54575a;
+    background-color: #eceff1;
+}
+.confirm-msg {
+    margin: 8px 0;
+    color: red;
+}
+.dataTables_wrapper div.dataTables_paginate .paginate_button {
+    margin: 0 4px !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    color: #fff !important;
+    background: #404e67 !important;
+}
+.text-bold {
+    font-weight: bold;
+}
+.nav-item i {
+    margin-right: 1rem;
+}
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 10px 16px;
+    font-size: 14px;
+    text-transform: capitalize;
+    line-height: 24px;
+}
+.blank-page .content-wrapper .flexbox-container {
+    height: calc(var(--vh, 1vh) * 80);
+}
+
+.main-menu.menu-dark .navigation > li.active > a {
+    color: #fff;
+}
+
+.option-item .option-input-wrap:hover .delete-row {
+    display: block;
+}
+.option-item .option-input-wrap .delete-row {
+    color: #DD4B39;
+    position: absolute;
+    left: -41px;
+    width: 45px;
+    display: none;
+}
+.option-item .option-input-wrap .delete-row i {
+    font-size: 40px;
+}
+.pointer {
+    cursor: pointer
+}
+.customOverflowHidden{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.steric {
+    color: rgb(240, 86, 89) !important;
+    margin-left: 5px;
+    font-size: 17px;
+}
+.mr-6 {
+    margin-right: 5rem !important;
+}
+.formControlPositionIconRight {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    z-index: 2;
+    display: block;
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+}
+.w-20 {
+    width: 20%;
+}
+.card-header .card-title {
+    text-transform: capitalize;
+    font-weight: normal;
+}
+.mr-05px {
+    margin-right: 5px;
+}
+.ngx-pagination {
+    padding-left: 0 !important;
+}
+.ngx-pagination .current {
+    background: #404e67 !important;
+    border-radius: 4px !important;
+}
+.disable-text-selection {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+@media print {
+    html, body {
+       display: none;  /* hide whole page */
+    }
+}
+.dataTables_length {
+    display: none;
+}

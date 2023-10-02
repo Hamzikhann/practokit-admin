@@ -1,0 +1,359 @@
+<div *ngIf="!loading" class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-6 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Assessment</h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)"
+                                [routerLink]="['/assessments']">Assessments</a></li>
+                        <li class="breadcrumb-item">Detail</li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)"
+                                [routerLink]="['/assessments/detail/', quiz.id]">{{quiz.title}}</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div *ngIf="currentUser.role.title != 'Teacher'" class="col-md-4 col-12"></div>
+                <div *ngIf="currentUser.role.title != 'Teacher'" class="col-md-4 col-12"></div>
+                <div class="col-md-4 col-12">
+                    <div class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)" (click)="viewResponse()">
+                            Responses <span
+                                class="badge badge-pill badge-info badge-up ml-1">{{quiz.quizSubmissions.length}}</span>
+                        </a>
+                    </div>
+                </div>
+                <div *ngIf="currentUser.role.title == 'Teacher'" class="col-md-4 col-12">
+                    <div class="actions">
+                        <a class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#assignAssessment"
+                            (click)="getStudentsForAssessment()">Assign</a>
+                    </div>
+                </div>
+                <div *ngIf="currentUser.role.title == 'Teacher'" class="col-md-4 col-12">
+                    <div class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)"
+                            [routerLink]="['/assessments/edit/', quizId]">
+                            <i class="fa fa-edit mr-1"></i> Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!detailLoading" class="content-body">
+        <section class="assessment-view">
+            <div class="card">
+                <div class="card-content collapse show">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Assessment Title</h5>
+                                <p class="leading-para mb-1">
+                                    <span class="feather icon-clipboard mr-1"></span>{{quiz.title}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">{{quiz.classTitle}}</h5>
+                                <p class="leading-para mb-1">
+                                    <span class="feather icon-book mr-1"></span>{{quiz.courseTitle}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Total Marks</h5>
+                                <p class="leading-para mb-1"><span class="feather icon-star mr-1"></span>{{totalMarks}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Total Time</h5>
+                                <p class="leading-para mb-1"><span
+                                        class="feather icon-clock mr-1"></span>{{formatedTotalTime}}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">No. of Questions</h5>
+                                <p class="leading-para mb-1"><span
+                                        class="feather icon-hash mr-1"></span>{{quiz.questionsPool.length}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Questions Types</h5>
+                                <div class="leading-para mb-1">
+                                    <div class="badge badge-info mr-05px" *ngFor="let type of questionsType">{{type}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <h5 class="font-weight-bold">Topics or Tags</h5>
+                                <div class="topics">
+                                    <div class="badge badge-primary mr-1 disable-text-selection"
+                                        *ngFor="let tag of quiz.tags">{{tag.title}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="questions-added mb-2">
+                            <div class="card" *ngFor="let question of quiz.questionsPool; let i = index">
+                                <div class="card-body">
+                                    <div class="count">#{{i+1}}</div>
+                                    <div class="statement disable-text-selection">
+                                        <div class="badge" [ngClass]="question.questionDifficulty.title == 'Very Easy'? 'very-easy':
+                                        question.questionDifficulty.title == 'Easy'? 'easy':
+                                        question.questionDifficulty.title == 'Medium'? 'medium':
+                                        question.questionDifficulty.title == 'Hard'? 'hard':
+                                        question.questionDifficulty.title == 'Very Hard'? 'very-hard': ''">
+                                            {{question.questionDifficulty.title}} </div>
+                                        <div class="badge badge-primary">{{question.points}} Marks</div>
+                                        <div class="badge badge-info">{{question.questionType.title}}</div>
+                                        <div class="badge badge-danger">{{question.timeDuration}}</div>
+                                        {{question.statement}}
+                                    </div>
+                                    <div class="icons">
+                                        <a href="javascript:void(0)" data-toggle="modal"
+                                            data-target="#viewQuestionModal" (click)="onModalOpen(question)">
+                                            <span class="feather icon-eye"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div *ngIf="loading || detailLoading" class="row text-center justify-content-center" style="margin-top: 100px;">
+    <img src="assets/app-assets/images/loading.gif" alt="">
+</div>
+
+
+<!-- View Detail -->
+<div class="modal fade" id="viewQuestionModal" tabindex="-1" role="dialog" aria-labelledby="viewQuestionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header px-2">
+                <h5 class="modal-title" id="viewQuestionModalTitle">Question Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="!detailLoading" class="modal-body m-1">
+                <div class="row mb-1">
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Class</label>
+                        <p>{{selectedQuestion.class}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Course</label>
+                        <p>{{selectedQuestion.course}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Difficulty</label>
+                        <p>{{selectedQuestion.difficulty}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Type</label>
+                        <p>{{selectedQuestion.type}}</p>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <div class="d-flex">
+                            <div style="overflow-wrap: anywhere;"
+                                [ngStyle]="selectedQuestion.questionsAttribute?.statementImage? {width: '45%'}: {}">
+                                <label class="text-bold">Statement</label>
+                                <p class="disable-text-selection">{{selectedQuestion.statement}}</p>
+                            </div>
+                            <div style="align-content: flex-end;"
+                                [ngStyle]="selectedQuestion.questionsAttribute?.statementImage? {width: '40%'}: {}">
+                                <span data-toggle="modal" data-target="#showFullImage" style="width: 30%;height: auto;">
+                                    <img *ngIf="safeUrl!=''" class="pointer" style="width: 30%;height: auto;"
+                                        [src]="safeUrl" alt="" data-toggle="tooltip" data-placement="bottom"
+                                        title="Click to View"
+                                        (click)="popUpImage=safeUrl; popUpImageSource='Statement';">
+                                </span>
+                                <img *ngIf="selectedQuestion?.questionsAttribute?.statementImage && safeUrl==''"
+                                    style="width: 20%;height: auto;" src="assets/app-assets/images/loading.gif" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedQuestion.type == 'MCQ'" class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="text-bold">Options</label>
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let option of selectedQuestion.options; let i = index">
+                                <span class="float-left disable-text-selection">
+                                    <i *ngIf="!option.correct" class="fa fa-circle-o mr-1"></i><i *ngIf="option.correct"
+                                        class="fa fa-circle mr-1"></i>{{option.title}}
+                                </span>
+                                <div *ngIf="option.image"
+                                    [ngClass]="option.title!='' && option.title!=null? 'text-right':'text-left'">
+                                    <span data-toggle="modal" data-target="#showFullImage"
+                                        style="width: 10%;height: auto;">
+                                        <img *ngIf="optionsSafeUrl[i]!=''" class="pointer"
+                                            style="width: 10%;height: auto;" [src]="optionsSafeUrl[i]" alt=""
+                                            data-toggle="tooltip" data-placement="bottom" title="Click to View"
+                                            (click)="popUpImage=optionsSafeUrl[i]; popUpImageSource='Option'">
+                                    </span>
+                                    <img *ngIf="optionsSafeUrl[i]==''" style="height: 30px;width: auto;"
+                                        src="assets/app-assets/images/loading.gif" alt="">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div *ngIf="selectedQuestion.type == 'Fill in the Blank' || selectedQuestion.type == 'True/False'"
+                    class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="row col-md-3 disable-text-selection">
+                            <label class="text-bold">{{selectedQuestion.type == 'Fill in the Blank'? 'Answer: ':
+                                selectedQuestion.type+ ': '}}</label>
+                            <span *ngIf="selectedQuestion.type == 'Fill in the Blank'" class="pl-1 text-capitalize">
+                                {{selectedQuestion.options[0].title}}
+                            </span>
+                            <span *ngIf="selectedQuestion.type == 'True/False'" class="pl-1 text-capitalize">
+                                {{selectedQuestion.options[0].correct? 'true':'false'}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-6">
+                        <label class="text-bold">Topics or Tags</label>
+                        <p class="tags">
+                            <span *ngFor="let tag of selectedQuestion.tags">
+                                <i class="fa fa-tag mr-05px"></i>
+                                <span class="disable-text-selection">{{tag}}</span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-bold">Time to Attempt</label>
+                        <p>{{selectedQuestion.timeDuration}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-bold">Points</label>
+                        <p>{{selectedQuestion.points}}</p>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="detailLoading" class="row text-center justify-content-center" style="margin: 100px;">
+                <img src="assets/app-assets/images/loading.gif" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View image in large view -->
+<div class="modal fade" id="showFullImage" tabindex="-1" role="dialog" aria-labelledby="removeQuestionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="popUpImageSource!=''" class="modal-title" id="removeQuestionModalTitle">{{popUpImageSource}}
+                    Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img *ngIf="popUpImage!=''" style="max-width: 100%;height: auto;" [src]="popUpImage" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Assign Assessment to student -->
+<div class="modal fade" id="assignAssessment" tabindex="-1" role="dialog" aria-labelledby="assignAssessmentTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignAssessmentTitle">Assign Assessment</h5>
+                <button id="dismissAssignModal" type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="resetAssignToList()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="!modalLoading" class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12 mb-1">
+                        <!-- <ng-selectize name="classes" [placeholder]="'Select Single or Multiple Students'"
+                            [config]="multipleOptionsConfig" [options]="studentsList" [(ngModel)]="assignToList">
+                        </ng-selectize> -->
+
+                        <div class="tags">
+                            <div class="group-control" (clickOutside)="onClickedOutside($event)">
+                                <div class="selected">
+
+                                    <span *ngFor="let student of selectedStudents; let i = index"
+                                        class="selected-course">
+                                        {{student.label}}
+                                        <span class="remove-icon"
+                                            (click)="removeCourse(i,selectedStudents[i],$event)">x</span>
+                                    </span>
+                                </div>
+                                <div>
+
+
+                                    <input class="form-control border-0 shadow-none" type="text"
+                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfStudents"
+                                        placeholder="Search for a course" (click)="toggleDropdown()">
+                                </div>
+                            </div>
+
+                            <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                                [ngClass]="{ 'show': dropdownOpen }">
+                                <ul class="filtered-courses dropdown-menu">
+
+                                    <ng-container *ngFor="let filter of filterStudents; let i = index">
+
+                                        <li class="p-2" (click)="addCourse(filter.label,filter.value,$event)">
+                                            {{ filter.label }}
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <span *ngIf="studentsList.length == 0" class="danger">No Student Found.</span>
+                    </div>
+                </div>
+                <div *ngIf="alreadyAssignedStudentList.length" class="row">
+                    <div class="col-12">
+                        <small>Already Assigned Students: </small>
+                    </div>
+                    <div class="col-12 mb-1">
+                        <div class="badge mr-05px" *ngFor="let student of alreadyAssignedStudentList; let i=index">
+                            {{student.firstName}} {{student.lastName}}
+                            <a class="feather icon-x-circle ml-1" (click)="removeStudent(student, i)"
+                                data-toggle="tooltip" title=""></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="assignToStudents()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="modalLoading" class="modal-body m-1 row text-center justify-content-center"
+                style="margin-top: 100px;">
+                <img src="assets/app-assets/images/loading.gif" alt="">
+            </div>
+        </div>
+    </div>
+</div>

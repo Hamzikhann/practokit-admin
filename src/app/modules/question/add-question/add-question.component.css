@@ -1,0 +1,169 @@
+hr {
+  margin: 2rem 0;
+}
+textarea.form-control {
+  height: 92px;
+}
+fieldset label {
+  border: 1px solid #babfc7;
+  border-radius: 4px;
+  display: block;
+  margin: 8px 0;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+fieldset label input[type="radio"] {
+  margin-right: 8px;
+}
+.option-item .option-input-wrap {
+  position: relative;
+}
+.option-item .option-input-wrap .form-control {
+  margin-left: 0;
+  padding-left: 40px;
+  padding-right: 25%;
+}
+.option-item .form-control {
+  margin: 10px 0;
+  margin-left: 50px;
+}
+.option-item .option-input-wrap span {
+  position: absolute;
+  left: 16px;
+  top: 11px;
+  color: #404e67;
+  font-weight: 600;
+  font-size: 14px;
+}
+.option-item .option-input-wrap .correct {
+  position: absolute;
+  right: 16px;
+  top: 10px;
+}
+.form-check-input {
+  margin-left: -1.5rem;
+}
+label.custom-file-label {
+  text-align: left;
+}
+.customButtonOutline {
+  border-color: #eceff1;
+  background-color: #cacaca;
+  color: black;
+}
+#toast-container > div {
+  opacity: 1;
+}
+.spinner_overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  z-index: 1500;
+}
+.spinner_overlay img {
+  position: relative;
+  z-index: 160000;
+}
+.custom-danger {
+  color: #fd5e5e;
+}
+select {
+  cursor: pointer;
+}
+input[type="file"],
+.custom-file > label,
+.custom-file > a > .form-check-label {
+  cursor: pointer;
+}
+
+/*********************************************/
+/* Add this CSS to your stylesheet */
+.tags {
+  margin: 10px;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.group-control {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+.group-control .selected {
+  display: flex;
+}
+.group-control .selected-course {
+  background-color: lightgray;
+  color: #302f2f;
+  border-radius: 16px;
+  padding: 3px 6px;
+  margin: 3px;
+  display: flex;
+  align-items: center;
+  margin-right: 3px;
+}
+.group-control .selected-course .remove-icon {
+  cursor: pointer;
+  margin-left: 4px;
+  font-weight: bold;
+  padding-left: 3px;
+}
+.group-control .selected-course .remove-icon:hover {
+  color: #fff;
+}
+.group-control input.form-control {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.filtered-courses {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filtered-courses li {
+  margin: 0;
+}
+
+.dropdown.show {
+  display: block;
+  margin-top: 4px;
+}
+
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown.show .dropdown-menu {
+  display: block;
+  position: absolute;
+  background-color: #f1eeee;
+  border: 1px solid rgba(245, 242, 242, 0.15);
+  box-shadow: 0 3px 5px rgba(80, 2, 2, 0.1);
+}
+
+.dropdown-menu .custom-control {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.dropdown-menu .custom-control-indicator {
+  margin-right: 8px;
+}
+
+.filtered-courses li:hover {
+  background-color: #c5c4c4; /* Change to your desired background color */
+  cursor: pointer;
+}
+/* Add more styles as needed */

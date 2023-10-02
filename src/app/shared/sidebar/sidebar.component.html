@@ -1,0 +1,102 @@
+<!-- BEGIN: Main Menu-->
+<div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
+    <div class="main-menu-content">
+        <ul *ngIf="!loading" class="navigation navigation-main mb-2" id="main-menu-navigation">
+            <li class=" navigation-header">
+                <span>General</span>
+            </li>
+            <li class=" nav-item" [class.active]="router.url == '/'">
+                <a href="javascript:void(0)" routerLink="/">
+                    <i class="feather icon-home"></i>
+                    <span class="menu-title">Dashboard</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title == 'Admin'" class=" nav-item" [class.active]="router.url == '/users'">
+                <a href="javascript:void(0)" routerLink="/users">
+                    <i class="feather icon-users"></i>
+                    <span class="menu-title">Users</span>
+                </a>
+            </li>
+            <li class=" nav-item" [class.active]="router.url == '/classes'">
+                <a href="javascript:void(0)" routerLink="/classes">
+                    <i class="feather icon-grid"></i>
+                    <span class="menu-title">Classes</span>
+                </a>
+            </li>
+            <li class=" nav-item" [class.active]="router.url == '/subjects'">
+                <a href="javascript:void(0)" routerLink="/subjects">
+                    <i class="feather icon-book"></i>
+                    <span class="menu-title">Subjects</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title == 'Teacher'" class=" nav-item"
+                [class.active]="router.url == '/questions'">
+                <a href="javascript:void(0)" routerLink="/questions">
+                    <i class="feather icon-layout"></i><span class="menu-title">All Questions</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title == 'Admin' || currentUser.role.title == 'Teacher'"
+                class=" navigation-header">
+                <span>Assessment</span>
+            </li>
+            <li *ngIf="currentUser.role.title == 'Teacher'" class=" nav-item"
+                [class.active]="router.url.includes('assessments/edit/') || router.url == '/assessments/create'">
+                <a href="javascript:void(0)" routerLink="/assessments/create">
+                    <i class="feather icon-clipboard"></i><span class="menu-title">Create Assessment</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title == 'Admin' || currentUser.role.title == 'Teacher'" class=" nav-item"
+                [class.active]="router.url.includes('assessments/detail') || router.url == '/assessments'">
+                <a href="javascript:void(0)" routerLink="/assessments">
+                    <i class="feather icon-list"></i><span class="menu-title">Listing</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title != 'Teacher'" class=" navigation-header">
+                <span>Questions</span>
+            </li>
+            <li *ngIf="currentUser.role.title == 'Editor'" class=" nav-item"
+                [class.active]="router.url == '/questions/create'">
+                <a href="javascript:void(0)" routerLink="/questions/add">
+                    <i class="feather icon-plus-square"></i><span class="menu-title">Create New</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title != 'Teacher'" class=" nav-item"
+                [class.active]="router.url == '/questions'">
+                <a href="javascript:void(0)" routerLink="/questions">
+                    <i class="feather icon-layout"></i><span class="menu-title">All Questions</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title != 'Teacher'" class=" nav-item"
+                [class.active]="router.url == '/questions/difficulties'">
+                <a href="javascript:void(0)" routerLink="/questions/difficulties">
+                    <i class="feather icon-align-left"></i><span class="menu-title">Difficulties</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title != 'Teacher'" class=" nav-item"
+                [class.active]="router.url == '/questions/tags'">
+                <a href="javascript:void(0)" routerLink="/questions/tags">
+                    <i class="fa fa-tags"></i><span class="menu-title">Topics or Tags</span>
+                </a>
+            </li>
+            <li *ngIf="currentUser.role.title != 'Teacher'" class=" nav-item"
+                [class.active]="router.url == '/questions/types'">
+                <a href="javascript:void(0)" routerLink="/questions/types">
+                    <i class="feather icon-layers"></i><span class="menu-title">Types</span>
+                </a>
+            </li>
+
+
+            <!-- Others -->
+            <li *ngIf="currentUser.role.title == 'Admin'" class=" navigation-header">
+                <span>Others</span>
+            </li>
+            <li *ngIf="currentUser.role.title == 'Admin'" class=" nav-item"
+                [class.active]="router.url == '/complaints'">
+                <a href="javascript:void(0)" routerLink="/complaints">
+                    <i class="feather icon-alert-triangle"></i><span class="menu-title">Complaints</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- END: Main Menu-->

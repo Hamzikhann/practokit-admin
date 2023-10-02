@@ -1,0 +1,12 @@
+input[type="search"]:focus-visible {
+    outline: none;
+}
+ul.list-inline li {
+    margin: 0 4px;
+}
+.list-group-item {
+    padding: 0.5rem 1rem;
+}
+.badge {
+    margin: 2px;
+}

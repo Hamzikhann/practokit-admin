@@ -1,0 +1,77 @@
+.questions-added .card {
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+.questions-added .card .card-body {
+    display: flex;
+    padding: 1rem;
+}
+.questions-added .card .card-body .count {
+    width: 40px;
+    font-weight: bold;
+}
+.questions-added .card .card-body .statement {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    margin-bottom: 0;
+    width: 100%;
+    padding: 0 40px 0 0;
+}
+.questions-added .card .card-body .statement .badge {
+    margin: 0 4px;
+}
+.questions-added .card .card-body .icons {
+    width: 60px;
+    margin: auto;
+}
+.questions-added .card .card-body .icons span {
+    padding: 4px;
+}
+.questions-added .badge-primary {
+    background-color: #00B5B8;
+}
+.questions-added .card:last-child {
+    margin-bottom: 0 !important;
+}
+.questions-added .card.selected {
+    background: #f3f3f3;
+}
+.wizard.wizard-circle > .steps > ul > li.current:after,
+.wizard.wizard-circle > .steps > ul > li.current ~ li:before,
+.wizard.wizard-circle > .steps > ul > li.current ~ li:after {
+    background-color: #fff !important;
+}
+.card {
+    margin-top: 1rem;
+}
+.card .card-body {
+    padding: 2rem;
+}
+.card .card-body .filters p {
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+.filters div {
+    margin-bottom: 12px;
+}
+.very-easy {    
+    background-color: #1da513!important;
+}
+.easy {    
+    background-color: #9fcc00!important;
+}
+.medium {    
+    background-color: #dccf00!important;
+}
+.hard {    
+    background-color: #feae01!important;
+}
+.very-hard {    
+    background-color: #fe2b00!important;
+}
+.tags span {
+    margin-right: 8px;
+}

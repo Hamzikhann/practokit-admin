@@ -1,0 +1,95 @@
+input[type="search"]:focus-visible {
+  outline: none;
+}
+ul.list-inline li {
+  margin: 0 4px;
+}
+
+/*********************************************/
+/* Add this CSS to your stylesheet */
+.tags {
+  margin: 10px;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.group-control {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+.group-control .selected {
+  display: flex;
+}
+.group-control .selected-course {
+  background-color: lightgray;
+  color: #302f2f;
+  border-radius: 16px;
+  padding: 3px 6px;
+  margin: 3px;
+  display: flex;
+  align-items: center;
+  margin-right: 3px;
+}
+.group-control .selected-course .remove-icon {
+  cursor: pointer;
+  margin-left: 4px;
+  font-weight: bold;
+  padding-left: 3px;
+}
+.group-control .selected-course .remove-icon:hover {
+  color: #fff;
+}
+.group-control input.form-control {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.filtered-courses {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filtered-courses li {
+  margin: 0;
+}
+
+.dropdown.show {
+  display: block;
+  margin-top: 4px;
+}
+
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown.show .dropdown-menu {
+  display: block;
+  position: absolute;
+  background-color: #f1eeee;
+  border: 1px solid rgba(245, 242, 242, 0.15);
+  box-shadow: 0 3px 5px rgba(80, 2, 2, 0.1);
+}
+
+.dropdown-menu .custom-control {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.dropdown-menu .custom-control-indicator {
+  margin-right: 8px;
+}
+
+.filtered-courses li:hover {
+  background-color: #c5c4c4; /* Change to your desired background color */
+  cursor: pointer;
+}
+/* Add more styles as needed */

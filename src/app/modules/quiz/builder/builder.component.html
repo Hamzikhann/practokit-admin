@@ -1,0 +1,646 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-6 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Assessment Teacher</h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">Assessment
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div class="col-md-7 col-12"></div>
+                <div class="col-md-5 col-12">
+                    <div *ngIf="title && gradeId && courseId && (selectedQuestions.length || viewAssessment)"
+                        class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)"
+                            (click)="validAssessment()" *ngIf="editAssessment">
+                            <i class="feather icon-eye mr-1"></i> View Assessment
+                        </a>
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)" (click)="showEditView()"
+                            *ngIf="viewAssessment">
+                            <i class="feather icon-edit mr-1"></i> Edit Assessment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-body">
+        <section class="assessment-edit" *ngIf="editAssessment">
+            <div class="row">
+                <div class="col-12">
+                    <div class="icons-tab-steps wizard-circle wizard">
+                        <div class="steps">
+                            <ul role="tablist">
+                                <li role="tab" [ngClass]="{'current': step === 1, 'done': step > 1}" class="first">
+                                    <a href="javascript:void(0)">
+                                        <span class="step"><i class="step-icon fa fa-book"></i></span>
+                                        Class & Subject
+                                    </a>
+                                </li>
+                                <li role="tab" [ngClass]="{'current': step === 2, 'done': step > 2}">
+                                    <a href="javascript:void(0)">
+                                        <span class="step"><i class="step-icon fa fa-tags"></i></span>
+                                        Select Questions
+                                    </a>
+                                </li>
+                                <li role="tab" [ngClass]="{'current': step === 3, 'done': step > 3}">
+                                    <a href="javascript:void(0)">
+                                        <span class="step"><i class="step-icon fa fa-stack-overflow"></i></span>
+                                        Review & Create
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!loading && step == 1">
+                        <div class="card">
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div class="row filters mb-1">
+                                        <div class="col-12">
+                                            <p>Assessment Title</p>
+                                            <input type="string" class="form-control" name="title" #Title="ngModel"
+                                                placeholder="Enter Assessment title here" [(ngModel)]="title" required>
+                                            <span *ngIf="(Title.errors  || Title.invalid) && Title.touched"
+                                                class="text-danger"> * Please Enter Title.</span>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <p>Class</p>
+                                            <select class="custom-select form-control" name="gradeList" #Grade="ngModel"
+                                                [disabled]="editMode" id="GradeDropdown" [(ngModel)]="gradeId"
+                                                (ngModelChange)="setGrade(); courseId=''; getCourses();" required>
+                                                <option value="" selected disabled>Select Class</option>
+                                                <option *ngFor="let grade of gradeList" value="{{grade.id}}">
+                                                    {{grade.title}}</option>
+                                            </select>
+                                            <span *ngIf="(Grade.errors  || Grade.invalid) && Grade.touched"
+                                                class="text-danger"> * Please Select Class.</span>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <p>Subject</p>
+                                            <select class="custom-select form-control" name="coursesList"
+                                                #Course="ngModel" [disabled]="editMode? true: gradeId? false:true"
+                                                id="CoursesDropdown" [(ngModel)]="courseId"
+                                                (ngModelChange)="setCourse()" required>
+                                                <option value="" selected disabled>Select Subject</option>
+                                                <option *ngFor="let course of CoursesList" value="{{course.id}}">
+                                                    {{course.title}}</option>
+                                            </select>
+                                            <span *ngIf="CoursesList.length == 0 && gradeId">No Subjects Found</span>
+                                            <span *ngIf="(Course.errors  || Course.invalid) && Course.touched"
+                                                class="text-danger"> * Please Select Course.</span>
+                                        </div>
+                                    </div>
+                                    <div class="actions text-right">
+                                        <button class="btn btn-primary w-20"
+                                            [disabled]="!title || !gradeId || !courseId"
+                                            (click)=" getAllCourseQuestions();getDifficulties(); getTags(); goToStep(2);">Continue</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="step-2" *ngIf="step == 2">
+                        <div class="card">
+                            <div class="card-content collapse show">
+                                <div *ngIf="!questionsLoading" class="card-body">
+                                    <div class="row filters d-flex flex-column">
+                                        <div class="col-md-3 col-12">
+                                            <p>Difficulty Level</p>
+                                            <!-- <ng-selectize [options]="difficultyList" [config]="multipleOptionsConfig"
+                                                [placeholder]="'Select Diffculty Level'"
+                                                [(ngModel)]="selectedDifficulties" (ngModelChange)="filter(); q = 1;">
+                                            </ng-selectize> -->
+                                            <div class="tags">
+                                                <div class="group-control"
+                                                    (clickOutside)="onClickedOutsideforDiffculty($event)">
+                                                    <div class="selected">
+
+                                                        <span
+                                                            *ngFor="let difficulty of selectedDifficulty; let i = index"
+                                                            class="selected-course">
+                                                            {{difficulty}}
+                                                            <span class="remove-icon"
+                                                                (click)="removeDifficulty(i,selectedDifficulty[i],$event)">x</span>
+                                                        </span>
+                                                    </div>
+                                                    <div>
+
+
+                                                        <input class="form-control border-0 shadow-none" type="text"
+                                                            (input)="onInputDifficulty()"
+                                                            [(ngModel)]="searchQueryOfDifficulty"
+                                                            placeholder="Search for a difficulty"
+                                                            (click)="toggleDropdownOfDifficulty()">
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="dropdownOpenOfDifficulty" class="dropdown position-absolute"
+                                                    [ngClass]="{ 'show': dropdownOpenOfDifficulty }">
+                                                    <ul class="filtered-courses dropdown-menu">
+
+                                                        <ng-container
+                                                            *ngFor="let filter of filterDifficulty; let i = index">
+
+                                                            <li class="p-2"
+                                                                (click)="addDifficulty(filter.label,$event)">
+                                                                {{ filter.label }}
+                                                            </li>
+                                                        </ng-container>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-9 col-12">
+                                            <p>Topics or Tags</p>
+                                            <!-- <ng-selectize [options]="tagList" [config]="multipleOptionsConfig"
+                                                [placeholder]="'Select Topics or Tags'" [(ngModel)]="selectedTags"
+                                                (ngModelChange)="filter(); q = 1;">
+                                            </ng-selectize> -->
+                                            <div class="tags">
+                                                <div class="group-control" (clickOutside)="onClickedOutside($event)">
+                                                    <div class="selected">
+
+                                                        <span *ngFor="let course of selectedTags; let i = index"
+                                                            class="selected-course">
+                                                            {{course}}
+                                                            <span class="remove-icon"
+                                                                (click)="removeCourse(i,selectedTags[i],$event)">x</span>
+                                                        </span>
+                                                    </div>
+                                                    <div>
+
+
+                                                        <input class="form-control border-0 shadow-none" type="text"
+                                                            (input)="onInputChange()" [(ngModel)]="searchQueryOfTags"
+                                                            placeholder="Search for a course"
+                                                            (click)="toggleDropdown()">
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                                                    [ngClass]="{ 'show': dropdownOpen }">
+                                                    <ul class="filtered-courses dropdown-menu">
+
+                                                        <ng-container *ngFor="let filter of filterTags; let i = index">
+
+                                                            <li class="p-2" (click)="addCourse(filter.label,$event)">
+                                                                {{ filter.label }}
+                                                            </li>
+                                                        </ng-container>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <span *ngIf="!tagList.length" class="danger">No Tag Found.</span>
+                                        </div>
+                                    </div>
+                                    <div class="questions-added mb-2">
+                                        <p class="font-weight-bold">Questions <small>
+                                                <!-- Count For Pagination -->
+                                                <span>(Showing {{q == pageLength? lastPageLength :
+                                                    filteredQuestions.length > perPagePagination? perPagePagination :
+                                                    filteredQuestions.length}} of {{questions.length}}
+                                                    questions)</span></small>
+                                            <span class="font-weight-bold float-right"><small>Questions
+                                                    Selected:</small>
+                                                {{selectedQuestions.length}}</span>
+                                        </p>
+                                        <!-- | paginate: { itemsPerPage: perPagePagination, currentPage: q }; -->
+                                        <div class="row col-md-12 p-0 ml-0 mr-0 card" style="flex-direction: row;"
+                                            *ngFor="let question of filteredQuestions; let i = index"
+                                            [ngClass]="selectedQuestionsIds.indexOf(question.id) != -1? 'selected': ''">
+                                            <div class="col-md-11 card-body pointer" (click)="selectQuestion(question)">
+                                                <div class="count">#{{i+1}}</div>
+                                                <div class="statement disable-text-selection">
+                                                    <div class="badge" [ngClass]="question.questionDifficulty.title == 'Very Easy'? 'very-easy':
+                                                    question.questionDifficulty.title == 'Easy'? 'easy':
+                                                    question.questionDifficulty.title == 'Medium'? 'medium':
+                                                    question.questionDifficulty.title == 'Hard'? 'hard':
+                                                    question.questionDifficulty.title == 'Very Hard'? 'very-hard': ''">
+                                                        {{question.questionDifficulty.title}} </div>
+                                                    <div class="badge badge-primary">{{question.points}} Marks</div>
+                                                    <div class="badge badge-info">{{question.questionType.title}}</div>
+                                                    <div class="badge badge-danger">{{question.timeDuration}}</div>
+                                                    {{question.statement}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 card-body">
+                                                <div class="icons text-center">
+                                                    <a href="javascript:void(0)" data-toggle="modal"
+                                                        data-target="#viewQuestionModal"
+                                                        (click)="onModalOpen(question)">
+                                                        <span class="feather icon-eye"></span>
+                                                    </a>
+                                                    <a *ngIf="this.selectedQuestionsIds.indexOf(question.id) != -1"
+                                                        href="javascript:void(0)"
+                                                        (click)="deSelectQuestion(question.id)">
+                                                        <span class="feather icon-trash-2 danger"></span>
+                                                    </a>
+                                                    <a *ngIf="this.selectedQuestionsIds.indexOf(question.id) == -1"
+                                                        href="javascript:void(0)" (click)="selectQuestion(question)">
+                                                        <span class="feather icon-plus"></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!filteredQuestions.length"
+                                            class="row text-center m-5 justify-content-center">
+                                            <div class="">
+                                                <img src="assets/app-assets/images/noData.png" alt="">
+                                                <p>No Question Found</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <pagination-controls *ngIf="filteredQuestions.length > perPagePagination"
+                                                class="inbox-pagination text-left p-0"
+                                                (pageChange)="q = $event"></pagination-controls>
+                                        </div>
+                                        <div class="row actions col-md-6 p-0">
+                                            <div class="col-md-4"></div>
+                                            <div class="col-md-4 p-0">
+                                                <button class="btn btn-default w-100" (click)="goToStep(1)"><span
+                                                        class="feather icon-chevrons-left"></span> Go Back</button>
+                                            </div>
+                                            <div class="col-md-4 p-0">
+                                                <button class="btn btn-primary w-100"
+                                                    [disabled]="selectedQuestions.length==0"
+                                                    (click)="getReviewData(); goToStep(3)">Continue</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="questionsLoading" class="row text-center justify-content-center"
+                                    style="margin: 100px;">
+                                    <img src="assets/app-assets/images/loading.gif" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="step-3" *ngIf="step == 3 && !reviewLoading">
+                        <div class="card">
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-md-3 col-12">
+                                            <h5 class="font-weight-bold">Assessment Title</h5>
+                                            <p class="leading-para mb-1">
+                                                <span class="feather icon-clipboard mr-1"></span>{{title}}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3 col-12">
+                                            <h5 class="font-weight-bold">{{gradeTitle}}</h5>
+                                            <p class="leading-para mb-1">
+                                                <span class="feather icon-book mr-1"></span>{{courseTitle}}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3 col-12">
+                                            <h5 class="font-weight-bold">Total Marks</h5>
+                                            <p class="leading-para mb-1"><span
+                                                    class="feather icon-star mr-1"></span>{{totalMarks}}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3 col-12">
+                                            <h5 class="font-weight-bold">Total Time</h5>
+                                            <p class="leading-para mb-1"><span
+                                                    class="feather icon-clock mr-1"></span>{{formatedTotalTime}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-3 col-12">
+                                            <h5 class="font-weight-bold">No. of Questions</h5>
+                                            <p class="leading-para mb-1"><span
+                                                    class="feather icon-hash mr-1"></span>{{selectedQuestions.length}}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3 col-12">
+                                            <h5 class="font-weight-bold">Questions Types</h5>
+                                            <div class="leading-para mb-1">
+                                                <div class="badge badge-info mr-05px"
+                                                    *ngFor="let type of selectedQuestionsType">{{type}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <h5 class="font-weight-bold">Topics or Tags</h5>
+                                            <div class="topics">
+                                                <div class="badge badge-primary mr-05px disable-text-selection"
+                                                    *ngFor="let tag of reviewTags">
+                                                    {{tag}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selectedQuestions.length" class="questions-added mb-2">
+                                        <div class="card" *ngFor="let question of selectedQuestions; let i = index">
+                                            <div class="card-body">
+                                                <div class="count">#{{i+1}}</div>
+                                                <div class="statement disable-text-selection">
+                                                    <div class="badge" [ngClass]="question.questionDifficulty.title == 'Very Easy'? 'very-easy':
+                                                    question.questionDifficulty.title == 'Easy'? 'easy':
+                                                    question.questionDifficulty.title == 'Medium'? 'medium':
+                                                    question.questionDifficulty.title == 'Hard'? 'hard':
+                                                    question.questionDifficulty.title == 'Very Hard'? 'very-hard': ''">
+                                                        {{question.questionDifficulty.title}} </div>
+                                                    <div class="badge badge-primary">{{question.points}} Marks</div>
+                                                    <div class="badge badge-info">{{question.questionType.title}}</div>
+                                                    <div class="badge badge-danger">{{question.timeDuration}}</div>
+                                                    {{question.statement}}
+                                                </div>
+                                                <div class="icons">
+                                                    <a href="javascript:void(0)" data-toggle="modal"
+                                                        data-target="#viewQuestionModal"
+                                                        (click)="onModalOpen(question)">
+                                                        <span class="feather icon-eye"></span>
+                                                    </a>
+                                                    <a href="javascript:void(0)"
+                                                        (click)="deSelectQuestion(question.id); getReviewData();">
+                                                        <span class="feather icon-trash-2 danger"></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!selectedQuestions.length"
+                                        class="row text-center mb-2 justify-content-center">
+                                        <div class="">
+                                            <img src="assets/app-assets/images/noData.png" alt="">
+                                            <p>No Question Selected</p>
+                                        </div>
+                                    </div>
+                                    <div class="actions text-right">
+                                        <button class="btn btn-default w-20" (click)="goToStep(2)"><span
+                                                class="feather icon-chevrons-left"></span> Go Back</button>
+                                        <button class="btn btn-primary w-20" (click)="createQuiz()">{{editMode? 'Update
+                                            Assessment':'Create Assessment'}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="step == 3 && reviewLoading" class="row text-center justify-content-center"
+                        style="margin: 100px;">
+                        <img src="assets/app-assets/images/loading.gif" alt="">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="assessment-view" *ngIf="viewAssessment && !reviewLoading">
+            <div class="card">
+                <div class="card-content collapse show">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Assessment Title</h5>
+                                <p class="leading-para mb-1">
+                                    <span class="feather icon-clipboard mr-1"></span>{{title}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">{{gradeTitle}}</h5>
+                                <p class="leading-para mb-1">
+                                    <span class="feather icon-book mr-1"></span>{{courseTitle}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Total Marks</h5>
+                                <p class="leading-para mb-1"><span class="feather icon-star mr-1"></span>{{totalMarks}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Total Time</h5>
+                                <p class="leading-para mb-1"><span
+                                        class="feather icon-clock mr-1"></span>{{formatedTotalTime}}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">No. of Questions</h5>
+                                <p class="leading-para mb-1"><span
+                                        class="feather icon-hash mr-1"></span>{{selectedQuestions.length}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <h5 class="font-weight-bold">Questions Types</h5>
+                                <div class="leading-para mb-1">
+                                    <div class="badge badge-info mr-05px" *ngFor="let type of selectedQuestionsType">
+                                        {{type}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <h5 class="font-weight-bold">Topics or Tags</h5>
+                                <div class="topics">
+                                    <div class="badge badge-primary mr-05px disable-text-selection"
+                                        *ngFor="let tag of reviewTags">
+                                        {{tag}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedQuestions.length" class="questions-added mb-2">
+                            <div class="card" *ngFor="let question of selectedQuestions; let i = index">
+                                <div class="card-body">
+                                    <div class="count">#{{i+1}}</div>
+                                    <div class="statement disable-text-selection">
+                                        <div class="badge" [ngClass]="question.questionDifficulty.title == 'Very Easy'? 'very-easy':
+                                        question.questionDifficulty.title == 'Easy'? 'easy':
+                                        question.questionDifficulty.title == 'Medium'? 'medium':
+                                        question.questionDifficulty.title == 'Hard'? 'hard':
+                                        question.questionDifficulty.title == 'Very Hard'? 'very-hard': ''">
+                                            {{question.questionDifficulty.title}} </div>
+                                        <div class="badge badge-primary">{{question.points}} Marks</div>
+                                        <div class="badge badge-info">{{question.questionType.title}}</div>
+                                        <div class="badge badge-danger">{{question.timeDuration}}</div>
+                                        {{question.statement}}
+                                    </div>
+                                    <div class="icons">
+                                        <a href="javascript:void(0)" data-toggle="modal"
+                                            data-target="#viewQuestionModal" (click)="onModalOpen(question)">
+                                            <span class="feather icon-eye"></span>
+                                        </a>
+                                        <a href="javascript:void(0)"
+                                            (click)="deSelectQuestion(question.id); getReviewData();">
+                                            <span class="feather icon-trash-2 danger"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!selectedQuestions.length" class="row text-center mb-2 justify-content-center">
+                            <div class="">
+                                <img src="assets/app-assets/images/noData.png" alt="">
+                                <p>No Question Selected</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div *ngIf="viewAssessment && reviewLoading" class="row text-center justify-content-center"
+            style="margin: 100px;">
+            <img src="assets/app-assets/images/loading.gif" alt="">
+        </div>
+    </div>
+</div>
+
+<div *ngIf="loading" class="row text-center justify-content-center" style="margin: 100px;">
+    <img src="assets/app-assets/images/loading.gif" alt="">
+</div>
+
+
+<!-- View Detail -->
+<div class="modal fade" id="viewQuestionModal" tabindex="-1" role="dialog" aria-labelledby="viewQuestionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header px-2">
+                <h5 class="modal-title" id="viewQuestionModalTitle">Question Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="!detailLoading" class="modal-body m-1">
+                <div class="row mb-1">
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Class</label>
+                        <p>{{selectedQuestion.class}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Course</label>
+                        <p>{{selectedQuestion.course}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Difficulty</label>
+                        <p>{{selectedQuestion.difficulty}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Type</label>
+                        <p>{{selectedQuestion.type}}</p>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <div class="d-flex">
+                            <div style="overflow-wrap: anywhere;"
+                                [ngStyle]="selectedQuestion.questionsAttribute?.statementImage? {width: '45%'}: {}">
+                                <label class="text-bold">Statement</label>
+                                <p class="disable-text-selection">{{selectedQuestion.statement}}</p>
+                            </div>
+                            <div style="align-content: flex-end;"
+                                [ngStyle]="selectedQuestion.questionsAttribute?.statementImage? {width: '40%'}: {}">
+                                <span data-toggle="modal" data-target="#showFullImage" style="width: 30%;height: auto;">
+                                    <img *ngIf="safeUrl!=''" class="pointer" style="width: 30%;height: auto;"
+                                        [src]="safeUrl" alt="" data-toggle="tooltip" data-placement="bottom"
+                                        title="Click to View"
+                                        (click)="popUpImage=safeUrl; popUpImageSource='Statement';">
+                                </span>
+                                <img *ngIf="selectedQuestion?.questionsAttribute?.statementImage && safeUrl==''"
+                                    style="width: 20%;height: auto;" src="assets/app-assets/images/loading.gif" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedQuestion.type == 'MCQ'" class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="text-bold">Options</label>
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let option of selectedQuestion.options; let i = index">
+                                <span class="float-left disable-text-selection">
+                                    <i *ngIf="!option.correct" class="fa fa-circle-o mr-1"></i><i *ngIf="option.correct"
+                                        class="fa fa-circle mr-1"></i>{{option.title}}
+                                </span>
+                                <div *ngIf="option.image"
+                                    [ngClass]="option.title!='' && option.title!=null? 'text-right':'text-left'">
+                                    <span data-toggle="modal" data-target="#showFullImage"
+                                        style="width: 10%;height: auto;">
+                                        <img *ngIf="optionsSafeUrl[i]!=''" class="pointer"
+                                            style="width: 10%;height: auto;" [src]="optionsSafeUrl[i]" alt=""
+                                            data-toggle="tooltip" data-placement="bottom" title="Click to View"
+                                            (click)="popUpImage=optionsSafeUrl[i]; popUpImageSource='Option'">
+                                    </span>
+                                    <img *ngIf="optionsSafeUrl[i]==''" style="height: 30px;width: auto;"
+                                        src="assets/app-assets/images/loading.gif" alt="">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div *ngIf="selectedQuestion.type == 'Fill in the Blank' || selectedQuestion.type == 'True/False'"
+                    class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="row col-md-3 disable-text-selection">
+                            <label class="text-bold">{{selectedQuestion.type == 'Fill in the Blank'? 'Answer: ':
+                                selectedQuestion.type+ ': '}}</label>
+                            <span *ngIf="selectedQuestion.type == 'Fill in the Blank'" class="pl-1 text-capitalize">
+                                {{selectedQuestion.options[0].title}}
+                            </span>
+                            <span *ngIf="selectedQuestion.type == 'True/False'" class="pl-1 text-capitalize">
+                                {{selectedQuestion.options[0].correct? 'true':'false'}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-6">
+                        <label class="text-bold">Topics or Tags</label>
+                        <p class="tags">
+                            <span *ngFor="let tag of tagsList">
+                                <i class="fa fa-tag mr-05px"></i>
+                                <span class="disable-text-selection">{{tag}}</span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-bold">Time to Attempt</label>
+                        <p>{{selectedQuestion.timeDuration}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-bold">Points</label>
+                        <p>{{selectedQuestion.points}}</p>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="detailLoading" class="row text-center justify-content-center" style="margin: 100px;">
+                <img src="assets/app-assets/images/loading.gif" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View image in large view -->
+<div class="modal fade" id="showFullImage" tabindex="-1" role="dialog" aria-labelledby="removeQuestionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="popUpImageSource!=''" class="modal-title" id="removeQuestionModalTitle">{{popUpImageSource}}
+                    Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img *ngIf="popUpImage!=''" style="max-width: 100%;height: auto;" [src]="popUpImage" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

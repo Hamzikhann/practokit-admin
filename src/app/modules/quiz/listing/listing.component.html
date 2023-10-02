@@ -1,0 +1,152 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-4 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Assessments </h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">Assessments
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-8 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div class="col-md-3 col-12"></div>
+                <div *ngIf="currentUser.role.title!='Teacher'" class="col-md-3 col-12"></div>
+                <div *ngIf="!gradeId" class="col-md-3 col-12"></div>
+                <div class="col-md-3 col-12">
+                    <div class="filters">
+                        <select class="custom-select form-control" name="gradeList1" id="GradeDropdown1"
+                            [(ngModel)]="gradeId" (ngModelChange)="courseId=''; Filter(); getCourses();">
+                            <option value="" selected disabled>Select Class</option>
+                            <option value="">All</option>
+                            <option *ngFor="let grade of gradeList" value="{{grade.id}}">{{grade.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="gradeId" class="col-md-3 col-12">
+                    <div class="filters">
+                        <select class="custom-select form-control" name="coursesList" id="CoursesDropdown"
+                            [(ngModel)]="courseId" (ngModelChange)="Filter()" [disabled]="gradeId? false: true">
+                            <option value="" selected>All Subjects</option>
+                            <option *ngFor="let course of coursesList" value="{{course.id}}">{{course.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="currentUser.role.title=='Teacher'" class="col-md-3 col-12">
+                    <div class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)"
+                            [routerLink]="['/assessments/create']">
+                            <i class="feather icon-plus"></i> Add New
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!loading" class="content-body">
+        <div *ngIf="filteredAssessmentList.length" class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <table datatable class="table table-striped table-bordered py-1 border-0">
+                        <thead>
+                            <tr>
+                                <th width="20%" class="text-center">Created At</th>
+                                <th width="35%">Title</th>
+                                <th width="10%">No. of Questions</th>
+                                <th width="10%" class="text-center">No. of Assigned Students</th>
+                                <th width="10%" class="text-center">No. of Responses</th>
+                                <th width="15%" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let assessment of filteredAssessmentList">
+                                <td class="text-center">{{assessment.createdAt}}</td>
+                                <td>{{assessment.title}}</td>
+                                <td class="text-center">{{assessment.questionsPool.length}}</td>
+                                <td class="text-center">{{assessment.uniqueAssignTos.size}}</td>
+                                <td class="text-center">{{assessment.quizSubmissions.length}}</td>
+                                <td class="text-center">
+                                    <ul class="list-inline">
+                                        <li><a href="javascript:void(0)"
+                                                [routerLink]="['/assessments/detail/', assessment.id]">
+                                                <i class="fa fa-eye"></i></a></li>
+                                        <li *ngIf="!assessment.quizSubmissions.length">
+                                            <a href="javascript:void(0)"
+                                                [routerLink]="['/assessments/edit/', assessment.id]">
+                                                <i class="fa fa-edit"></i></a>
+                                        </li>
+                                        <li *ngIf="currentUser.role.title=='Admin'">
+                                            <a href="javascript:void(0)" data-toggle="modal"
+                                                data-target="#removeAssessmentModal" (click)="modalOpen(assessment)">
+                                                <i class="fa fa-trash"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!filteredAssessmentList.length" class="row text-center m-5 justify-content-center">
+            <div class="">
+                <img src="assets/app-assets/images/noData.png" alt="">
+                <p>No Assessment found</p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="row text-center justify-content-center" style="margin-top: 100px;">
+        <img src="assets/app-assets/images/loading.gif" alt="">
+    </div>
+</div>
+
+
+<!-- Delete -->
+<div class="modal fade" id="removeAssessmentModal" tabindex="-1" role="dialog"
+    aria-labelledby="removeAssessmentModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeAssessmentModalTitle">Delete Assessment</h5>
+                <button type="button" id="dismissDeleteModal" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" disabled>
+                            <option selected>{{selectedAssessment.class}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" disabled>
+                            <option selected>{{selectedAssessment.course}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <input type="text" class="form-control" disabled value="{{selectedAssessment.title}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-12">
+                        <p class="confirm-msg">Are you sure, you want to remove this Assessment?</p>
+                    </div>
+                    <div class="col-md-3 col-12 text-right">
+                        <button type="button" class="btn btn-danger" (click)="deleteAssessment()"
+                            data-dismiss="modal">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+
+.question {
+    text-align: left;
+}
+
+.question .title {
+    /* padding: 20px 8px; */
+    background: rgb(134 142 160 / 24%);
+    border-radius: 8px;
+    /* margin: 20px 0; */
+}
+
+p {
+    margin-bottom: 0;
+}
+
+.count {
+    width: 40px;
+    font-weight: bold;
+}
+
+.question .title .sub-item {
+    display: grid;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+
+.question .title .sub-item .text-muted {
+    text-transform: capitalize;
+    /* font-size: 12px; */
+}
+
+.question .title .item {
+    display: flex;
+}
+
+.question .title .item .sub-item .head {
+    font-weight: 500;
+    /* margin-bottom: 4px; */
+    text-transform: capitalize;
+}
+
+.question .statement {
+    /* font-size: 20px; */
+    line-height: 28px;
+    /* padding: 32px 16px; */
+    /* margin: 12px 0 0 0; */
+}
+
+.question .answers .option {
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    text-align: left;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.question .answers .option input {
+    margin: 4px 12px;
+}
+
+.question .answers .option label {
+    margin-bottom: 0;
+    width: 93%;
+    display: inline;
+}
+
+.question .answers .option label .image {
+    padding: 4px;
+}
+
+.question .answers .wrong{
+    color: #fff;
+    background: #e97084;
+    border-color: #e97084;
+}
+
+.question .answers .correct{
+    color: #fff;
+    background: #00bcd4;
+    border-color: #00bcd4;
+    border-width: 2px;
+}
+
+.question .question-footer {
+    text-align: right;
+    margin: 20px 0;
+}
+
+.question .question-footer .btn {
+    color: #424e6a;
+    font-weight: bold;
+    padding: 0 0 0 20px;
+    border: 1px solid #424e6a;
+    border-radius: 22px;
+}
+
+.question .question-footer .btn i {
+    border: 1px solid #424e6a;
+    background: #424e6a;
+    border-radius: 50%;
+    color: #fff;
+    margin: 0 0 0 12px;
+    padding: 12px;
+}
+
+input[type='radio']:checked:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #2f070d4d;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}

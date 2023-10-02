@@ -1,0 +1,245 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-4 col-12 mb-2">
+            <h3 class="content-header-title mb-0">
+                Topics or Tags <!-- <small><a class="badge badge-primary font-weight-lighter" href="javascript:void(0)" data-toggle="modal" data-target="#addTagModal"><i class="feather icon-plus"></i>Add New</a></small> -->
+            </h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a>
+                        </li>
+                        <!-- <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/questions']">Questions</a>
+                        </li> -->
+                        <li class="breadcrumb-item active">Topics or Tags
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-8 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div *ngIf="!gradeId" class="col-md-3 col-12"></div>
+                <div *ngIf="currentUser.role.title != 'Editor'" class="col-md-3 col-12"></div>
+                <div class="col-md-3 col-12">
+                    <div class="filters">
+                        <select class="custom-select form-control" name="gradeList" id="GradeDropdown" 
+                        [(ngModel)]="gradeId" (ngModelChange)="search=courseId='';Filter(); getCourses();">
+                            <option value="" selected disabled>Select Class</option>
+                            <option value="">All</option> 
+                            <option *ngFor="let grade of gradeList" value="{{grade.id}}">{{grade.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="gradeId" class="col-md-3 col-12">
+                    <div class="filters">
+                        <select class="custom-select form-control" name="coursesList" id="CoursesDropdown" 
+                        [(ngModel)]="courseId" (ngModelChange)="search='';Filter()" [disabled]="gradeId? false: true">
+                            <option value="" selected>All Subjects</option> 
+                            <option *ngFor="let course of CoursesList" value="{{course.id}}">{{course.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control" placeholder="Search by Title" name="search" id="search" 
+                        [(ngModel)]="search" (ngModelChange)="Search()">
+                    </div>
+                </div>
+                <div *ngIf="currentUser.role.title == 'Editor'" class="col-md-3 col-12">
+                    <div class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)" data-toggle="modal" data-target="#addTagModal">
+                            <i class="feather icon-plus"></i> Add New
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!loading" class="content-body">
+        <div *ngIf="filteredTagList.length" class="row">
+            <div class="col-md-4 col-12" *ngFor="let tag of filteredTagList">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title disable-text-selection">{{tag.title}}</h4>
+                            <small *ngIf="!gradeId" class="align-right" 
+                                [ngClass]="currentUser.role.title == 'Admin'? 'mr-6': 
+                                currentUser.id == tag.createdBy? 'mr-3':''"
+                            >{{tag.course.class.title}}</small>
+                            <small *ngIf="gradeId" class="align-right"
+                                [ngClass]="currentUser.role.title == 'Admin'? 'mr-6': 
+                                currentUser.id == tag.createdBy? 'mr-3':''"
+                            >{{tag.course.title}}</small>
+                        </div>
+                        <div *ngIf="currentUser.id == tag.createdBy || currentUser.role.title == 'Admin'" class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a href="javascript:void(0)" data-toggle="modal" data-target="#updateTagModal" 
+                                    (click)="ModalOpen(tag); getCourses(tag.course.class.id); updateTag.classId = tag.course.class.id"><i class="fa fa-edit"></i></a></li>
+                                <li *ngIf="currentUser.role.title == 'Admin'" ><a href="javascript:void(0)" data-toggle="modal" data-target="#removeTagModal" (click)="ModalOpen(tag)"><i class="fa fa-trash"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!filteredTagList.length" class="row text-center m-5 justify-content-center">
+            <div class="">
+                <img src="assets/app-assets/images/noData.png" alt="">
+                <p>No Tag found</p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="row text-center justify-content-center" style="margin-top: 100px;">
+        <img src="assets/app-assets/images/loading.gif" alt="">
+    </div>
+</div>
+
+<!-- Add New -->
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" aria-labelledby="addTagModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTagModalTitle">Add New Topic or Tag</h5>
+                <button id="dismissAddModal" type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetAddTag()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" name="gradeList" id="GradeDropdown" 
+                        [(ngModel)]="addTag.gradeId" (ngModelChange)="getCourses(addTag.gradeId);">
+                            <option value="" selected disabled>Select Class</option>
+                            <option *ngFor="let grade of gradeList" value="{{grade.id}}">{{grade.title}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" name="coursesList" id="CoursesDropdown" 
+                        [(ngModel)]="addTag.courseId" [disabled]="addTag.gradeId? false: true">
+                            <option value="" selected disabled>Select Subject</option> 
+                            <option *ngFor="let course of CoursesList" value="{{course.id}}">{{course.title}}</option>
+                        </select>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-link"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input topic or tag" aria-describedby="new-tag" [(ngModel)]="addTag.title">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="AddTag()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update -->
+<div class="modal fade" id="updateTagModal" tabindex="-1" role="dialog" aria-labelledby="updateTagModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTagModalTitle">Update Tag</h5>
+                <button type="button" id="dismissUpdateModal" class="close" data-dismiss="modal" aria-label="Close" (click)="resetUpdateTag()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" [(ngModel)]="updateTag.classId" 
+                            (ngModelChange)="getCourses(updateTag.classId);" disabled>
+                            <option disabled>Select Class</option>
+                            <option *ngFor="let grade of gradeList" value="{{grade.id}}" 
+                                [selected]="grade.id==selectedTag.classId? true: false">
+                                {{grade.title}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" [(ngModel)]="updateTag.courseId" disabled>
+                            <option disabled>Select Subject</option>
+                            <option *ngFor="let course of CoursesList" value="{{course.id}}"
+                                [selected]="course.id==selectedTag.courseId? true: false">
+                                {{course.title}}
+                            </option>
+                        </select>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-link"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input topic or tag" aria-describedby="new-tag"
+                            value="{{selectedTag.title}}" [(ngModel)]="updateTag.title">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="EditTag()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete -->
+<div class="modal fade" id="removeTagModal" tabindex="-1" role="dialog" aria-labelledby="removeTagModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeTagModalTitle">Remove Tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" disabled>
+                            <option selected>{{selectedTag.class}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <select class="custom-select form-control mb-1" disabled>
+                            <option selected>{{selectedTag.course}}</option>
+                        </select>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-link"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input topic or tag" aria-describedby="new-tag" disabled value="{{selectedTag.title}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-12">
+                        <p class="confirm-msg">Are you sure, you want to remove this tag?</p>
+                    </div>
+                    <div class="col-md-3 col-12 text-right">
+                        <button type="button" class="btn btn-danger" (click)="DeleteTag()" data-dismiss="modal">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

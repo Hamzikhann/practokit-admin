@@ -1,0 +1,110 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "update-assesment-admin": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/update-assesment-admin",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": [
+              "src/styles.scss",
+              "src/assets/app-assets/css/vendors.min.css",
+              "src/assets/app-assets/css/bootstrap.css",
+              "src/assets/app-assets/css/bootstrap-extended.css",
+              "src/assets/app-assets/css/colors.css",
+              "src/assets/app-assets/css/components.css",
+              "src/assets/app-assets/css/project.css",
+              "src/assets/app-assets/css/menu-vertical-modern.css",
+              "src/assets/app-assets/css/colors-palette-gradient.css",
+              "node_modules/datatables.net-dt/css/jquery.dataTables.css",
+
+              "src/assets/app-assets/css/wizard.css",
+              "src/assets/custom.css",
+              "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css"
+            ],
+            "scripts": [
+              "src/assets/app-assets/js/vendors.min.js",
+              "src/assets/app-assets/js/app-menu.js",
+              "src/assets/app-assets/js/app.js",
+              "node_modules/datatables.net/js/jquery.dataTables.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "update-assesment-admin:build:production"
+            },
+            "development": {
+              "browserTarget": "update-assesment-admin:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "update-assesment-admin:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
+            "scripts": []
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+.card-title {
+    background: #5c687e;
+    display: flex;
+}
+.card-title img {
+    height: 36px;
+    padding: 4px 6px;
+}

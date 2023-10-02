@@ -1,0 +1,380 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-6 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Users</h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a></li>
+                        <li class="breadcrumb-item active">Users</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div class="col-md-4 col-12"></div>
+                <div *ngIf="currentUser.role.title!='Admin'" class="col-md-4 col-12"></div>
+                <div class="col-md-4 col-12">
+                    <div class="filters">
+                        <select class="custom-select form-control" name="selectRole1" id="selectRole1"
+                            [(ngModel)]="filterRole" (ngModelChange)="Filter();">
+                            <option value="" selected disabled>Select Role</option>
+                            <option value="">All</option>
+                            <option *ngFor="let role of rolesList" value="{{role.id}}">{{role.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="currentUser.role.title=='Admin'" class="col-md-4 col-12">
+                    <div class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)" data-toggle="modal"
+                            data-target="#addUserModal">
+                            <i class="feather icon-plus"></i> Add New
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!loading" class="content-body">
+        <div *ngIf="filteredUsersList.length" class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <table datatable class="table table-striped table-bordered py-1 border-0">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th class="text-center">Role</th>
+                                <th *ngIf="currentUser.role.title=='Admin'" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of filteredUsersList">
+                                <td>
+                                    <a href="javascript:void(0)">
+                                        {{user.firstName? user.firstName: ""}} {{user.lastName? user.lastName:""}}
+                                    </a>
+                                </td>
+                                <td>{{user.email}}</td>
+                                <td class="text-center">{{user.role.title}}</td>
+                                <td *ngIf="currentUser.role.title=='Admin'" class="text-center">
+                                    <ul class="list-inline mb-0">
+                                        <li><a href="javascript:void(0)" data-toggle="modal"
+                                                data-target="#updateUserModal" (click)="selectUser(user)"><i
+                                                    class="fa fa-edit"></i></a></li>
+                                        <li><a href="javascript:void(0)" data-toggle="modal"
+                                                data-target="#removeUserModal" (click)="selectUser(user)"><i
+                                                    class="fa fa-trash"></i></a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!filteredUsersList.length" class="row text-center m-5 justify-content-center">
+            <div class="">
+                <img src="assets/app-assets/images/noData.png" alt="">
+                <p>No User found</p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="row text-center justify-content-center" style="margin-top: 100px;">
+        <img src="assets/app-assets/images/loading.gif" alt="">
+    </div>
+</div>
+
+<!-- Add New -->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalTitle">Add New User</h5>
+                <button id="dismissAddModal" type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="resetAddUser()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user first name"
+                                id="newFirstName" name="newFirstName" aria-describedby="new-tag"
+                                [(ngModel)]="addUser.firstName">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user last name" id="newLastName"
+                                name="newLastName" aria-describedby="new-tag" [(ngModel)]="addUser.lastName">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-mail"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user email address" id="newEmail"
+                                name="newEmail" aria-describedby="new-tag" [(ngModel)]="addUser.email">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <select class="custom-select form-control mb-1" name="role" id="role" [(ngModel)]="addUser.role"
+                            (ngModelChange)="changeRole(addUser.role);">
+                            <option value="" selected disabled>Select Role</option>
+                            <option *ngFor="let role of rolesList" value="{{role.id}}">{{role.title}}</option>
+                        </select>
+                    </div>
+                    <div *ngIf="selectedRole == 'Teacher'" class="col-12">
+                        <!-- <ng-selectize name="classes" [placeholder]="'Select Single or Multiple Subjects for Teaching'"
+                            [config]="currentOptionsConfig" [options]="classCoursesList" [(ngModel)]="selectedCourses">
+                        </ng-selectize> -->
+                        <div class="tags">
+                            <div class="group-control" (clickOutside)="onClickedOutside($event)">
+                                <div class="selected">
+
+                                    <span *ngFor="let course of selectedClassCourses; let i = index"
+                                        class="selected-course">
+                                        {{course.title}}
+                                        <span class="remove-icon"
+                                            (click)="removeCourse(i,selectedClassCourses[i],$event)">x</span>
+                                    </span>
+                                </div>
+                                <div>
+
+
+                                    <input class="form-control border-0 shadow-none" type="text"
+                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfClassCourses"
+                                        placeholder="Search for a course" (click)="toggleDropdown()">
+                                </div>
+                            </div>
+
+                            <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                                [ngClass]="{ 'show': dropdownOpen }">
+                                <ul class="filtered-courses dropdown-menu">
+
+                                    <ng-container *ngFor="let filter of filterClassCourses; let i = index">
+
+                                        <li class="p-2" (click)="addCourse(filter.title,filter.courseId,$event)">
+                                            {{ filter.title }}
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="AddUser()">Save
+                            changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update -->
+<div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="updateUserModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateUserModalTitle">Update User Info</h5>
+                <button type="button" id="dismissUpdateModal" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="resetUpdateUser()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user first name"
+                                value="{{selectedUser.firstName}}" aria-describedby="new-tag" disabled>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user last name"
+                                value="{{selectedUser.lastName}}" aria-describedby="new-tag" disabled>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-mail"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user email address"
+                                value="{{selectedUser.email}}" aria-describedby="new-tag" disabled>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <select class="custom-select form-control mb-1" name="updateRole" id="updateRole"
+                            [(ngModel)]="updateUser.role">
+                            <option value="" disabled>Select Role</option>
+                            <option *ngFor="let role of rolesList" value="{{role.title}}"
+                                [selected]="role.title == updateUser.role? true:false">{{role.title}}</option>
+                        </select>
+                    </div>
+                    <div *ngIf="updateUser.role == 'Teacher'" class="col-12">
+                        <!-- <ng-selectize id="classeslist1" name="classeslist1" [placeholder]="'Select Single or Multiple Subjects for Teaching'"
+                            [config]="currentOptionsConfig" [options]="classCoursesList" [(ngModel)]="updateUser.selectedCourses">
+                        </ng-selectize> -->
+                        <div class="tags">
+                            <div class="group-control" (clickOutside)="onClickedOutside($event)">
+                                <div class="selected">
+
+                                    <span *ngFor="let course of selectedClassCourses; let i = index"
+                                        class="selected-course">
+                                        {{course.title}}
+                                        <span class="remove-icon"
+                                            (click)="removeCourse(i,selectedClassCourses[i],$event)">x</span>
+                                    </span>
+                                </div>
+                                <div>
+
+
+                                    <input class="form-control border-0 shadow-none" type="text"
+                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfClassCourses"
+                                        placeholder="Search for a course" (click)="toggleDropdown()">
+                                </div>
+                            </div>
+
+                            <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                                [ngClass]="{ 'show': dropdownOpen }">
+                                <ul class="filtered-courses dropdown-menu">
+
+                                    <ng-container *ngFor="let filter of filterClassCourses; let i = index">
+
+                                        <li class="p-2" (click)="addCourse(filter.title,filter.courseId,$event)">
+                                            {{ filter.title }}
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="confirmUpdateUser()">Save
+                            changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete -->
+<div class="modal fade" id="removeUserModal" tabindex="-1" role="dialog" aria-labelledby="removeUserModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeUserModalTitle">Remove User Info</h5>
+                <button id="dismissDeleteModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" disabled placeholder="Input user first name"
+                                value="{{selectedUser.firstName}}" aria-describedby="new-tag">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" disabled placeholder="Input user last name"
+                                value="{{selectedUser.lastName}}" aria-describedby="new-tag">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-mail"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user email address"
+                                value="{{selectedUser.email}}" disabled aria-describedby="new-tag">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <select class="custom-select form-control mb-1" disabled>
+                            <option selected>{{selectedUser.role}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-12">
+                        <p class="confirm-msg">Are you sure, you want to remove this user?</p>
+                    </div>
+                    <div class="col-md-3 col-12 text-right">
+                        <button type="button" class="btn btn-danger" (click)="deleteUser()">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Teacher Role Update -->
+<div class="modal fade" id="updateTeacherModal" tabindex="-1" role="dialog" aria-labelledby="updateTeacherModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTeacherModalTitle">Update Teacher Role</h5>
+                <button id="dismissDeleteModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12">
+                        <p><a href="javascript:void(0)">{{selectedUser.firstName}} {{selectedUser.lastName}}</a> will be
+                            removed from teaching courses.</p>
+                        <p>Are you sure, you want to update Role?</p>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <div class="col-md-3 col-12 text-right">
+                        <button type="button" class="btn btn-danger" (click)="UpdateUser()" data-dismiss="modal"
+                            aria-label="Close">Update</button>
+                    </div>
+                    <div class="col-md-3 col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="updateUser.role='Teacher'"
+                            data-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#updateTeacherModal">Open Modal</button>

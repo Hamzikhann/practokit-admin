@@ -1,0 +1,105 @@
+
+$primary: #5E81F4;
+$secondary: #F8C35C;
+$danger: #DD4B39;
+
+
+.q-row {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	padding-bottom: 22px;
+	padding-top: 22px;
+
+	.form-control {
+		background: rgba(0, 0, 0, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.05);
+		border-radius: 4px;
+	}
+}
+
+.q-title {
+	h3 {
+		font-weight: 600;
+		font-size: 20px;
+		color: #333333;
+		margin-bottom: 4px;
+	}
+	p {
+		font-size: 14px;
+		margin: 0;
+		color: rgba(0, 0, 0, 0.5);
+	}
+}
+
+.option-box {
+	background: rgba(0, 0, 0, 0.03);
+	border-radius: 4px;
+	min-height: 73px;
+	padding: 0 20px;
+	display: flex;
+	align-items: center;
+}
+
+.option-item {
+	margin-bottom: 15px;
+	.input-wrap {
+		position: relative;
+		&:hover {
+			.delete-row {
+				display: block;
+			}
+		}
+		.delete-row {
+			color: $danger;
+			position: absolute;
+			left: -41px;
+    top: 6px;
+    width: 45px;
+    		display: none;
+			i {
+				font-size: 40px;
+			}
+		}
+		span {
+			position: absolute;
+			left: 20px;
+			top: 10px;
+			color: $primary;
+			font-weight: 600;
+			font-size: 18px;
+		}
+
+		.correct {
+			position: absolute;
+			right: 14px;
+			top: 12px;
+		}
+
+		.form-control {
+			min-height: 50px;
+			padding-left: 50px;
+		}
+	}
+}
+
+.list-checkboxes {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	display: flex;
+	flex-wrap: wrap;
+	li {
+    	width: 20%;
+    	margin-top: 14px;
+	}
+}
+
+@media screen and (max-width: 767px) {
+
+	.list-checkboxes li {
+		width: 50%;
+	}
+	
+}
+
+
+@import 'import/create';

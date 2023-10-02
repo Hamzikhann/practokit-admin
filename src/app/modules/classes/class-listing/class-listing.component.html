@@ -1,0 +1,167 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-6 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Classes</h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">Classes
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div class="col-md-4 col-12"></div>
+                <div class="col-md-4 col-12"></div>
+                <div class="col-md-4 col-12">
+                    <div *ngIf="currentUser.role.title=='Admin'" class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)" data-toggle="modal"
+                            data-target="#addClassModal">
+                            <i class="feather icon-plus"></i> Add New
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!loading" class="content-body">
+        <div class="row">
+            <div class="col-md-4 col-12" *ngFor="let grade of gradeList">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{{grade.title}}</h4>
+                        <div class="heading-elements">
+                            <ul *ngIf="currentUser.role.title=='Admin'" class="list-inline mb-0">
+                                <li><a href="javascript:void(0)" data-toggle="modal" data-target="#updateClassModal"
+                                        (click)="ModalOpen(grade)">
+                                        <i class="fa fa-edit"></i></a></li>
+                                <li><a href="javascript:void(0)" data-toggle="modal" data-target="#removeClassModal"
+                                        (click)="ModalOpen(grade)">
+                                        <i class="fa fa-trash"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!gradeList.length" class="row text-center m-5 justify-content-center">
+            <div class="">
+                <img src="assets/app-assets/images/noData.png" alt="">
+                <p>No Class found</p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="row text-items-center justify-content-center" style="margin-top: 100px;">
+        <img src="assets/app-assets/images/loading.gif" alt="">
+    </div>
+</div>
+
+<!-- Add New -->
+<div class="modal fade" id="addClassModal" tabindex="-1" role="dialog" aria-labelledby="addClassModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addClassModalTitle">Add New Class</h5>
+                <button id="dismissAddModal" #addModalClose type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-book"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input class name"
+                                aria-describedby="new-tag" [(ngModel)]="newGrade" (keyup.enter)="AddGrade();">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="AddGrade()"
+                            [disabled]="disableButton? true:false">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update -->
+<div class="modal fade" id="updateClassModal" tabindex="-1" role="dialog" aria-labelledby="updateClassModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateClassModalTitle">Update Class</h5>
+                <button id="dismissEditModal" #editModalClose type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-link"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input class name"
+                                aria-describedby="new-tag" [(ngModel)]="selectedGrade.title"
+                                (keyup.enter)="EditGrade();">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-primary" (click)="EditGrade()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete -->
+<div class="modal fade" id="removeClassModal" tabindex="-1" role="dialog" aria-labelledby="removeClassModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeClassModalTitle">Remove Class</h5>
+                <button id="dismissDeleteModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-link"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input tag or topic"
+                                aria-describedby="new-tag" disabled value="{{selectedGrade.title}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-12">
+                        <p class="confirm-msg">Are you sure, you want to remove this class?</p>
+                    </div>
+                    <div class="col-md-3 col-12 text-right">
+                        <button type="button" class="btn btn-danger" (click)="DeleteGrade()">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

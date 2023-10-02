@@ -1,0 +1,83 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-4 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Complaints</h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">Complaints
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-8 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div class="col-md-3 col-12"></div>
+                <div class="col-md-3 col-12"></div>
+                <div class="col-md-3 col-12"></div>
+                <div class="col-md-3 col-12"></div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!loading" class="content-body">
+        <div *ngIf="complaintsList.length" class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <table datatable class="table table-striped table-bordered py-1 border-0">
+                        <thead>
+                            <tr>
+                                <th width="20%" class="text-center">Created At</th>
+                                <th width="20%">Subject</th>
+                                <th width="30%">Description</th>
+                                <th width="10%" class="text-center">Status</th>
+                                <th width="10%" class="text-center">Reported By</th>
+                                <th width="10%" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let complaint of complaintsList">
+                                <td class="align-middle text-center">{{complaint.createdAt}}</td>
+                                <td class="align-middle">{{complaint.subject}}</td>
+                                <td class="align-middle">{{complaint.description}}</td>
+                                <td class="align-middle text-center">
+                                    <div *ngIf="complaint.status == 'fixed'" class="badge badge-success">Fixed</div>
+                                    <div *ngIf="complaint.status == 'viewed' || complaint.status == 'not-fixed'"
+                                        class="badge badge-danger">Not Fixed</div>
+                                    <div *ngIf="complaint.status == 'in-progress'" class="badge badge-info">In Progress
+                                    </div>
+                                </td>
+                                <td class="align-middle text-center">{{complaint.user.firstName}}
+                                    {{complaint.user.lastName}}</td>
+                                <td class="align-middle text-center">
+                                    <div *ngIf="complaint.status != 'fixed'" class="badge badge-success"
+                                        (click)="changeStatus(complaint.id, 'fixed')">
+                                        Mark as Fixed
+                                    </div>
+                                    <div *ngIf="complaint.status != 'in-progress'" class="badge badge-info"
+                                        (click)="changeStatus(complaint.id, 'in-progress')">
+                                        Mark as In Progress</div>
+                                    <div *ngIf="complaint.status != 'viewed' && complaint.status != 'not-fixed'"
+                                        (click)="changeStatus(complaint.id, 'not-fixed')" class="badge badge-danger">
+                                        Mark as Not Fixed
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!complaintsList.length" class="row text-center m-5 justify-content-center">
+            <div class="">
+                <img src="assets/app-assets/images/noData.png" alt="">
+                <p>No Complaint found</p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="row text-center justify-content-center" style="margin-top: 100px;">
+        <img src="assets/app-assets/images/loading.gif" alt="">
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-6 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Difficulties</h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a>
+                        </li>
+                        <!-- <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/questions']">Questions</a>
+                        </li> -->
+                        <li class="breadcrumb-item active">Difficulties
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2"></div>
+    </div>
+    <div *ngIf="!loading" class="content-body">
+        <div *ngIf="difficultyList.length" class="row">
+            <div class="col-md-4 col-12" *ngFor="let difficulty of difficultyList">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{{difficulty.title}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!difficultyList.length" class="row text-center m-5 justify-content-center">
+            <div class="">
+                <img src="assets/app-assets/images/noData.png" alt="">
+                <p>No Difficulty found</p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="row text-center justify-content-center" style="margin-top: 100px;">
+        <img src="assets/app-assets/images/loading.gif" alt="">
+    </div>
+</div>

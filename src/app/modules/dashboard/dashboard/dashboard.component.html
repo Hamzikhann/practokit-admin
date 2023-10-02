@@ -1,0 +1,418 @@
+<div id="screen" #screen class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+                <div class="card info-time-tracking">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="info-time-tracking-content">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="pr-2 pl-4 px-sm-4 px-md-2 py-md-2 d-flex">
+                                                <div class="task-content d-flex ">
+                                                    <div class="head-icon">
+                                                        <span
+                                                            class="card-icon primary d-flex justify-content-center mr-2">
+                                                            <i
+                                                                class="icon p-1 fa fa-quora customize-icon font-large-2 p-1"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="head-text">
+                                                        <h5 class="font-weight-bold mt-2 mt-sm-0">Welcome
+                                                            {{currentUser.firstName? currentUser.firstName: ""}}
+                                                            {{currentUser.lastName?
+                                                            currentUser.lastName:""}}!</h5>
+                                                        <p class="leading-para mb-0">
+                                                            Here you will define or create thousands of questions used
+                                                            to
+                                                            measure a student's academic abilities, skills and
+                                                            fluency
+                                                            in a given subject or to measure one's progress toward
+                                                            academic
+                                                            proficiency in a specific subject area.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!loading" class="row">
+            <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card pointer" routerLink="/subjects">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-left">
+                                    <h3 class="primary mb-0">{{totalCourses}}</h3>
+                                    <span>Subjects</span>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fa fa-book primary font-large-2 float-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="currentUser.role.title == 'Teacher' || currentUser.role.title == 'Admin'"
+                class="col-xl-3 col-sm-6 col-12">
+                <div class="card pointer" routerLink="/assessments">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-left">
+                                    <h3 class="info mb-0">{{allQuizStats.total}}</h3>
+                                    <span>Assessments</span>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="feather icon-clipboard info font-large-2 float-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-left pointer" routerLink="/questions">
+                                    <h3 class="warning mb-0">{{allQuestionStats.total}}</h3>
+                                    <span>Questions</span>
+                                </div>
+                                <div data-toggle="tooltip" title="View Count By Difficulties">
+                                    <div class="align-self-center pointer" data-toggle="modal"
+                                        data-target="#difficultyCount" (click)="getQuestionsCountByDifficulty()">
+                                        <i class="fa fa-question-circle question-info-circle float-right"></i>
+                                        <i class="fa fa-archive warning font-large-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="currentUser.role.title == 'Editor' || currentUser.role.title == 'Teacher'"
+                class="col-xl-3 col-sm-6 col-12">
+                <div class="card pointer" routerLink="/questions/tags">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-left">
+                                    <h3 class="success mb-0">{{totalTags}}</h3>
+                                    <span>Topics or Tags</span>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fa fa-tags success font-large-2 float-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="currentUser.role.title != 'Teacher'" class="col-xl-3 col-sm-6 col-12">
+                <div class="card pointer" routerLink="/users">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="media d-flex">
+                                <div class="media-body text-left">
+                                    <h3 class="danger mb-0">{{totalUsers}}</h3>
+                                    <span>Users</span>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fa fa-users danger font-large-2 float-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Questions Statistics -->
+        <div *ngIf="!loading && (currentUser.role.title == 'Admin' || currentUser.role.title == 'Editor')" class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h4 class="car d-title">Questions Statistics</h4>
+                            <div *ngIf="currentUser.role.title == 'Admin' && editorsList?.length"
+                                class="col-md-3 col-12 p-0 justify-content-end">
+                                <div class="filters">
+                                    <select class="custom-select form-control" name="editorsDropdown"
+                                        id="editorsascDropdown" [(ngModel)]="editorId"
+                                        (ngModelChange)="GetEditorStats();">
+                                        <option value="" selected>All Editors</option>
+                                        <option *ngFor="let editor of editorsList" value="{{editor.id}}">
+                                            {{editor.firstName? editor.firstName: ""}} {{editor.lastName?
+                                            editor.lastName:""}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div *ngIf="!questionstatsLoading" id="project-info" class="card-body row">
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{questionStats.today}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>Today</h5>
+                                </div>
+                            </div>
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{questionStats.yesterday}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>Yesterday</h5>
+                                </div>
+                            </div>
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{questionStats.week}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>This Week</h5>
+                                </div>
+                            </div>
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{questionStats.month}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>This Month</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="questionstatsLoading" class="row text-center justify-content-center">
+                            <img src="assets/app-assets/images/loading2.gif" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Assessments Statistics -->
+        <div *ngIf="!loading && (currentUser.role.title == 'Admin' || currentUser.role.title == 'Teacher')" class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h4 class="card-title">Assessments Statistics</h4>
+                            <div *ngIf="currentUser.role.title == 'Admin' && teachersList?.length"
+                                class="col-md-3 col-12 p-0 justify-content-end">
+                                <div class="filters">
+                                    <select class="custom-select form-control" name="editorsDropdown"
+                                        id="editorsascDropdown" [(ngModel)]="teacherId"
+                                        (ngModelChange)="GetTeacherStats();">
+                                        <option value="" selected>All Teachers</option>
+                                        <option *ngFor="let teacher of teachersList" value="{{teacher.id}}">
+                                            {{teacher.firstName? teacher.firstName: ""}} {{teacher.lastName?
+                                            teacher.lastName:""}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div *ngIf="!quizStatsLoading" id="project-info" class="card-body row">
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{quizStats.today}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>Today</h5>
+                                </div>
+                            </div>
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{quizStats.yesterday}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>Yesterday</h5>
+                                </div>
+                            </div>
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{quizStats.week}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>This Week</h5>
+                                </div>
+                            </div>
+                            <div class="project-info-count col-lg-3 col-md-12">
+                                <div class="project-info-icon">
+                                    <h2>{{quizStats.month}}</h2>
+                                    <div class="project-info-sub-icon">
+                                        <span class="fa fa-calendar-o"></span>
+                                    </div>
+                                </div>
+                                <div class="project-info-text pt-1">
+                                    <h5>This Month</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="quizStatsLoading" class="row text-center justify-content-center">
+                            <img src="assets/app-assets/images/loading2.gif" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="loading" class="row text-center justify-content-center" style="margin-top: 100px;">
+            <img src="assets/app-assets/images/loading.gif" alt="">
+        </div>
+    </div>
+</div>
+
+<!-- Questions Count By Difficulty -->
+<div class="modal fade" id="difficultyCount" tabindex="-1" role="dialog" aria-labelledby="difficultyCountModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div *ngIf="!QuestionsCountLoading" class="modal-header">
+                <h5 class="modal-title" id="difficultyCountModalTitle">Questions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="!QuestionsCountLoading" class="modal-body m-1">
+                <div class="row justify-content-center">
+                    <div class="col-6">
+                        <div class="card mb-1">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-left">
+                                            <h3 class="warning mb-0 very-easy">{{veryEasy}}</h3>
+                                            <span>Very Easy</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <img src="assets/app-assets/images/very-easy.png" width="70"
+                                                class="float-right" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card mb-1">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-left">
+                                            <h3 class="warning mb-0 easy">{{easy}}</h3>
+                                            <span>Easy</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <img src="assets/app-assets/images/easy.png" width="70" class="float-right"
+                                                alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card mb-1">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-left">
+                                            <h3 class="warning mb-0 medium">{{medium}}</h3>
+                                            <span>Medium</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <img src="assets/app-assets/images/medium.png" width="70"
+                                                class="float-right" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card mb-1">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-left">
+                                            <h3 class="warning mb-0 hard">{{hard}}</h3>
+                                            <span>Hard</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <img src="assets/app-assets/images/hard.png" width="70" class="float-right"
+                                                alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card mb-1">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="media-body text-left">
+                                            <h3 class="warning mb-0 very-hard">{{veryHard}}</h3>
+                                            <span>Very Hard</span>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <img src="assets/app-assets/images/very-hard.png" width="70"
+                                                class="float-right" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="QuestionsCountLoading" class="row text-center justify-content-center" style="margin: 100px 0;">
+                <img src="assets/app-assets/images/loading.gif" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <button (click)="export()">Take</button>  -->
+
+
+<!-- <img src="{{img}}" />
+
+<ngx-capture [target]="screen" (resultImage)="saveImage($event)"></ngx-capture> -->

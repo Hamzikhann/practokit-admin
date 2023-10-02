@@ -1,0 +1,296 @@
+<div class="content-wrapper">
+    <div class="content-header row">
+        <div class="content-header-left col-md-6 col-12 mb-2">
+            <h3 class="content-header-title mb-0">Questions</h3>
+            <div class="row breadcrumbs-top">
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a></li>
+                        <li class="breadcrumb-item active">Questions</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
+            <div class="row">
+                <div *ngIf="!gradeId" class="col-md-4 col-12"></div>
+                <div *ngIf="currentUser.role.title != 'Editor'" class="col-md-4 col-12"></div>
+                <div class="col-md-4 col-12">
+                    <div class="filters">
+                        <select class="custom-select form-control" name="gradeList" id="GradeDropdown"
+                            [(ngModel)]="gradeId" (ngModelChange)="courseId=''; Filter(); getCourses();">
+                            <option value="" selected disabled>Select Class</option>
+                            <option value="">All</option>
+                            <option *ngFor="let grade of gradeList" value="{{grade.id}}">{{grade.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="gradeId" class="col-md-4 col-12">
+                    <div class="filters">
+                        <select class="custom-select form-control" name="coursesList" id="CoursesDropdown"
+                            [(ngModel)]="courseId" (ngModelChange)="Filter()" [disabled]="gradeId? false: true">
+                            <option value="" selected>All Subjects</option>
+                            <option *ngFor="let course of CoursesList" value="{{course.id}}">{{course.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="currentUser.role.title == 'Editor'" class="col-md-4 col-12">
+                    <div class="actions">
+                        <a class="btn btn-outline-primary btn-block" href="javascript:void(0)"
+                            [routerLink]="['/questions/add']">
+                            <i class="feather icon-plus"></i> Add New
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!loading" class="content-body">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <table datatable class="table table-striped table-bordered py-1 border-0">
+                        <thead>
+                            <tr>
+                                <th width="50%">Statement</th>
+                                <th width="26%" class="text-center">Tags</th>
+                                <th width="7%" class="text-center">Difficulty</th>
+                                <th width="7%" class="text-center">Type</th>
+                                <th width="10%" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let question of filteredQuestionList">
+                                <td class="disable-text-selection">{{question.statement}}</td>
+                                <td class="text-center">
+                                    <p class="tags disable-text-selection">
+                                        <span *ngFor="let tag of question.questionTags" class="badge badge-primary">
+                                            {{tag.tag.title}}</span>
+                                    </p>
+                                </td>
+                                <td class="text-center">{{question.questionDifficulty.title}}</td>
+                                <td class="text-center">{{question.questionType.title}}</td>
+                                <td class="text-center">
+                                    <ul class="list-inline">
+                                        <li><a href="javascript:void(0)" data-toggle="modal"
+                                                data-target="#viewQuestionModal" (click)="onModalOpen(question)"><i
+                                                    class="fa fa-eye"></i></a></li>
+                                        <li
+                                            *ngIf="currentUser.id == question.createdBy || currentUser.role.title == 'Admin'">
+                                            <a href="javascript:void(0)"
+                                                [routerLink]="['/questions/edit',question.id]"><i
+                                                    class="fa fa-edit"></i></a>
+                                        </li>
+                                        <li *ngIf="currentUser.role.title == 'Admin'">
+                                            <a href="javascript:void(0)" data-toggle="modal"
+                                                data-target="#removeQuestionModal" (click)="onModalOpen(question)"><i
+                                                    class="fa fa-trash"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="row text-center justify-content-center" style="margin-top: 100px;">
+        <img src="assets/app-assets/images/loading.gif" alt="">
+    </div>
+</div>
+
+<!-- View Detail -->
+<div class="modal fade" id="viewQuestionModal" tabindex="-1" role="dialog" aria-labelledby="viewQuestionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header px-2">
+                <h5 class="modal-title" id="viewQuestionModalTitle">Question Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="!detailLoading" class="modal-body m-1">
+                <div class="row mb-1">
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Class</label>
+                        <p>{{selectedQuestion.class}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Course</label>
+                        <p>{{selectedQuestion.course}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Difficulty</label>
+                        <p>{{selectedQuestion.difficulty}}</p>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label class="text-bold">Type</label>
+                        <p>{{selectedQuestion.type}}</p>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <div class="d-flex">
+                            <div style="overflow-wrap: anywhere;"
+                                [ngStyle]="selectedQuestion.questionsAttribute?.statementImage? {width: '45%'}: {}">
+                                <label class="text-bold">Statement</label>
+                                <p class="disable-text-selection">{{selectedQuestion.statement}}</p>
+                            </div>
+                            <div style="align-content: flex-end;"
+                                [ngStyle]="selectedQuestion.questionsAttribute?.statementImage? {width: '40%'}: {}">
+                                <span data-toggle="modal" data-target="#showFullImage" style="width: 30%;height: auto;">
+                                    <img *ngIf="safeUrl!=''" class="pointer" style="width: 30%;height: auto;"
+                                        [src]="safeUrl" alt="" data-toggle="tooltip" data-placement="bottom"
+                                        title="Click to View"
+                                        (click)="popUpImage=safeUrl; popUpImageSource='Statement';">
+                                </span>
+                                <img *ngIf="selectedQuestion?.questionsAttribute?.statementImage && safeUrl==''"
+                                    style="width: 20%;height: auto;" src="assets/app-assets/images/loading.gif" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedQuestion.type == 'MCQ'" class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="text-bold">Options</label>
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let option of selectedQuestion.options; let i = index">
+                                <span class="float-left disable-text-selection">
+                                    <i *ngIf="!option.correct" class="fa fa-circle-o mr-1"></i>
+                                    <i *ngIf="option.correct" class="fa fa-circle mr-1"></i>
+                                    {{option.title}}
+                                </span>
+                                <div *ngIf="option.image"
+                                    [ngClass]="option.title!='' && option.title!=null? 'text-right':'text-left'">
+                                    <span data-toggle="modal" data-target="#showFullImage"
+                                        style="width: 10%;height: auto;">
+                                        <img *ngIf="optionsSafeUrl[i]!=''" class="pointer"
+                                            style="width: 10%;height: auto;" [src]="optionsSafeUrl[i]" alt=""
+                                            data-toggle="tooltip" data-placement="bottom" title="Click to View"
+                                            (click)="popUpImage=optionsSafeUrl[i]; popUpImageSource='Option'">
+                                    </span>
+                                    <img *ngIf="optionsSafeUrl[i]==''" style="height: 30px;width: auto;"
+                                        src="assets/app-assets/images/loading.gif" alt="">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div *ngIf="selectedQuestion.type == 'Fill in the Blank' || selectedQuestion.type == 'True/False'"
+                    class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="row col-md-3">
+                            <!-- <label class="text-bold disable-text-selection">{{selectedQuestion.type == 'Fill in the
+                                Blank'? 'Answer: ': selectedQuestion.type+ ': '}}</label> -->
+
+                            <label class="text-bold disable-text-selection">
+                                <span *ngIf="selectedQuestion.type == 'Fill in the Blank'">Answer: </span>
+                                <span *ngIf="selectedQuestion.type == 'True/False'">{{ selectedQuestion.type }}: </span>
+                            </label>
+                            <span *ngIf="selectedQuestion.type == 'Fill in the Blank'" class="pl-1 text-capitalize">
+                                {{selectedQuestion.options[0].title}}
+                            </span>
+                            <span *ngIf="selectedQuestion.type == 'True/False'"
+                                class="pl-1 text-capitalize disable-text-selection">
+                                {{selectedQuestion.options[0].correct? 'true':'false'}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-6">
+                        <label class="text-bold">Tags</label>
+                        <p class="tags">
+                            <span *ngFor="let tag of tagsList">
+                                <i class="fa fa-tag pr-1"></i>
+                                <span class="disable-text-selection">{{tag}}</span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-bold">Time to Attempt</label>
+                        <p>{{selectedQuestion.timeDuration}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="text-bold">Points</label>
+                        <p>{{selectedQuestion.points}}</p>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="detailLoading" class="row text-center justify-content-center" style="margin: 100px;">
+                <img src="assets/app-assets/images/loading.gif" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete -->
+<div class="modal fade" id="removeQuestionModal" tabindex="-1" role="dialog" aria-labelledby="removeQuestionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeQuestionModalTitle">Remove Question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <label class="text-bold">Class</label>
+                        <select class="custom-select form-control mb-1" disabled>
+                            <option selected>{{selectedQuestion.class}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label class="text-bold">Course</label>
+                        <select class="custom-select form-control mb-1" disabled>
+                            <option selected>{{selectedQuestion.course}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label class="text-bold">Question</label>
+                        <p>{{selectedQuestion.statement}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-12">
+                        <p class="confirm-msg">Are you sure, you want to remove this question?</p>
+                    </div>
+                    <div class="col-md-3 col-12 text-right">
+                        <button type="button" class="btn btn-danger" (click)="deleteQuestion()"
+                            data-dismiss="modal">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View image in large view -->
+<div class="modal fade" id="showFullImage" tabindex="-1" role="dialog" aria-labelledby="removeQuestionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="popUpImageSource!=''" class="modal-title" id="removeQuestionModalTitle">{{popUpImageSource}}
+                    Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-1">
+                <div class="row text-center">
+                    <div class="col-12">
+                        <img *ngIf="popUpImage!=''" style="max-width: 100%;height: auto;" [src]="popUpImage" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

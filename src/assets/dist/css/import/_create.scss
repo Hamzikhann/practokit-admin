@@ -1,0 +1,355 @@
+.create-quiz-header {
+    background-color: #4D637B;
+    border-bottom: 6px solid $primary;
+    padding: 40px 0;
+    position: relative;
+
+    .title {
+        font-size: 40px;
+        font-weight: bold;
+        color: #FFF;
+        text-align: center;
+    }
+
+    .navbar-wizard {
+        position: absolute;
+        bottom: -37px;
+        left: 0;
+        right: 0;
+    }
+}
+
+.navbar-wizard {
+    .nav-item {
+        .nav-link {
+            &.active {
+                span {
+                    background-color: $secondary;
+                    color: #FFF;
+                }
+            }
+
+            &.completed {
+                span {
+                    background-color: $primary;
+                    color: #FFF;
+                }
+            }
+
+            span {
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background-color: #FFF;
+                color: rgba(0, 0, 0, 0.4);
+                font-size: 26px;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.list-angle {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    &.items-2 {
+        display: flex;
+        flex-wrap: wrap;
+
+        li {
+            flex-basis: 50%;
+        }
+    }
+
+    li {
+        margin-bottom: 12px;
+
+        a {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            color: rgba(0, 0, 0, 0.5);
+
+            span {
+                padding-left: 12px;
+            }
+
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
+}
+
+.checkbox-wrap {
+    position: relative;
+    width: 256px;
+    height: 96px;
+    margin-bottom: 30px;
+
+}
+
+.box-checkbox {
+    position: absolute; // take it out of document flow
+    opacity: 0; // hide it
+
+    &+label {
+        position: relative;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    // Box.
+    &+label:before {
+        content: '';
+
+        display: block;
+
+        width: 256px;
+        height: 96px;
+        background: white;
+        position: absolute;
+        z-index: -1;
+        box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.02);
+        border-radius: 6px;
+        border: 1px solid $primary;
+    }
+
+    // Box hover
+    &:hover {
+        color: #FFF;
+    }
+
+    &:hover+label:before {
+        background: $primary;
+    }
+
+    // Box focus
+    &:focus+label:before {
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+    }
+
+    // Box checked
+    &:checked+label:before {
+        background: $primary;
+    }
+
+    &:checked+label {
+        color: #FFF;
+    }
+
+    // Disabled state label.
+    &:disabled+label {
+        color: #b8b8b8;
+        cursor: auto;
+    }
+
+    // Disabled box.
+    &:disabled+label:before {
+        box-shadow: none;
+        background: #ddd;
+    }
+
+    // Checkmark. Could be replaced with an image
+    &:checked+label:after {
+        content: '';
+        position: absolute;
+        right: 30px;
+        top: -21px;
+        background: white;
+        width: 2px;
+        height: 2px;
+        box-shadow:
+            2px 0 0 white,
+            4px 0 0 white,
+            4px -2px 0 white,
+            4px -4px 0 white,
+            4px -6px 0 white,
+            4px -8px 0 white;
+        transform: rotate(45deg);
+    }
+}
+
+
+
+.arrow-title {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+
+    >span {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .icon {
+        margin-right: 20px;
+    }
+}
+
+.option-item {
+    margin-bottom: 60px;
+
+    .form-control {
+        margin-left: 50px;
+        margin-top: 20px;
+    }
+
+    .radio-box-wrap {
+        padding-left: 60px;
+    }
+}
+
+
+.input-style-1 {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-radius: 0;
+}
+
+.radio-box-wrap {
+    display: flex;
+    align-items: center;
+    
+    padding-top: 20px;
+
+    .radio-box {
+        position: relative;
+        width: 90px;
+        height: 90px;
+        margin-right: 20px;
+    }
+
+    .radio-box-item {
+    position: absolute; // take it out of document flow
+    opacity: 0; // hide it
+
+    &+label {
+        position: relative;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 90px;
+        height: 90px;
+
+    }
+
+    // Box.
+    &+label:before {
+        content: '';
+        display: block;
+        width: 90px;
+        height: 90px;
+        background: white;
+        position: absolute;
+        z-index: -1;
+        box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.02);
+        border-radius: 6px;
+        border: 1px solid $primary;
+    }
+
+    // Box hover
+    &:hover {
+        color: #FFF;
+    }
+
+    &:hover+label:before {
+        background: $primary;
+    }
+
+    // Box focus
+    &:focus+label:before {
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+    }
+
+    // Box checked
+    &:checked+label:before {
+        background: $primary;
+    }
+
+    &:checked+label {
+        color: #FFF;
+    }
+
+    // Disabled state label.
+    &:disabled+label {
+        color: #b8b8b8;
+        cursor: auto;
+    }
+
+    // Disabled box.
+    &:disabled+label:before {
+        box-shadow: none;
+        background: #ddd;
+    }
+
+    // Checkmark. Could be replaced with an image
+    &:checked+label:after {
+        content: '';
+        position: absolute;
+        right: 30px;
+        top: -21px;
+        background: white;
+        width: 2px;
+        height: 2px;
+        box-shadow:
+            2px 0 0 white,
+            4px 0 0 white,
+            4px -2px 0 white,
+            4px -4px 0 white,
+            4px -6px 0 white,
+            4px -8px 0 white;
+        transform: rotate(45deg);
+    }
+}
+
+}
+
+
+.range-wrap {
+    padding-left: 60px;
+    padding-top: 40px;
+}
+
+@media screen and (max-width: 767px) {
+    .checkbox-wrap {
+        width: 100%;
+    }
+
+    .option-item .form-control {
+        margin-left: 0;
+    }
+
+    .option-item .radio-box-wrap {
+        padding-left: 0;
+    }
+
+    .radio-box-wrap .radio-box {
+        width: 70px;
+        height: 70px;
+    }
+
+    .radio-box-wrap .radio-box-item + label {
+        width: 70px;
+        height: 70px;
+    }
+
+    .radio-box-wrap .radio-box-item + label:before {
+        width: 70px;
+        height: 70px;
+    }
+}

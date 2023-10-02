@@ -1,0 +1,14 @@
+.header-title {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 1.4rem 0.75rem;
+}
+.header-title i {
+    margin-right: 12px;
+}
+.header-navbar .navbar-container ul.nav li a.dropdown-user-link .avatar {
+    margin-right: 1rem;
+}
+.header-navbar .navbar-container ul.nav li a.dropdown-user-link .user-name {
+    margin: 0 0.5rem;
+}

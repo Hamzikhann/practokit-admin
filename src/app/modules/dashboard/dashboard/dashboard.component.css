@@ -1,0 +1,49 @@
+#project-info {
+    padding-top: 32px;
+}
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+#project-info .project-info-count .project-info-sub-icon {
+    bottom: -12px;
+    left: 34px;
+    width: 36px;
+    height: 36px;
+}
+#project-info .project-info-count .project-info-sub-icon span {
+    font-size: 1rem;
+    top: 8px;
+}
+#project-info .project-info-text h5 {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 10px;
+    margin-top: 0;
+}
+.card-icon .customize-icon {
+    background-color: #F5F7FA;
+}
+.head-text {
+    margin-top: 4px;
+}
+.very-easy {    
+    color: #1da513!important;
+}
+.easy {    
+    color: #9fcc00!important;
+}
+.medium {    
+    color: #dccf00!important;
+}
+.hard {    
+    color: #feae01!important;
+}
+.very-hard {    
+    color: #fe2b00!important;
+}
+.question-info-circle {
+    font-size: larger;
+    margin-left: -13px;
+    color: #404e67!important;
+    position: relative;
+}
