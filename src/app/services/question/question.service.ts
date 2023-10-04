@@ -13,54 +13,13 @@ export class QuestionService {
 
   constructor(private http: HttpClient) {}
 
-  addQuestion(payload: {
-    courseId: string;
-    typeId: string;
-    difficultyId: string | null;
-    statement: string;
-    duration: number;
-    points: number | undefined;
-    hint: string;
-    tagIds: any;
-    statementImageSource: string;
-    hintFileSource: string;
-    solutionFileSource: string;
-    statementImage: any;
-    hintFile: any;
-    solutionFile: any;
-    statementFileName: string;
-    hintFileName: string;
-    solutionFileName: string;
-    options: any[];
-  }) {
+  addQuestion(payload: any) {
     return this.http.post(this.baseUrl, payload, {
       observe: 'response',
     });
   }
 
-  editQuestion(
-    questionId: string | null,
-    payload: {
-      courseId: string;
-      typeId: string;
-      difficultyId: string | null;
-      statement: string;
-      duration: number;
-      points: number | undefined;
-      hint: string;
-      tagIds: any;
-      statementImageSource: string;
-      hintFileSource: string;
-      solutionFileSource: string;
-      statementImage: any;
-      hintFile: any;
-      solutionFile: any;
-      statementFileName: string;
-      hintFileName: string;
-      solutionFileName: string;
-      options: any[];
-    }
-  ) {
+  editQuestion(questionId: string | null, payload: any) {
     return this.http.put(this.baseUrl + questionId, payload, {
       observe: 'response',
     });
@@ -92,6 +51,12 @@ export class QuestionService {
 
   deleteQuestion(questionId: string) {
     return this.http.delete(this.baseUrl + questionId, {
+      observe: 'response',
+    });
+  }
+
+  getFileSafeUrl(payload: any) {
+    return this.http.post(this.baseUrl, payload, {
       observe: 'response',
     });
   }

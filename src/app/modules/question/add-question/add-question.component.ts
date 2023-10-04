@@ -54,9 +54,9 @@ export class AddQuestionComponent implements OnInit {
   courseId: string = '';
   typeId: string = '';
   typeTitle: string = '';
-  difficultyId: string | null = '';
+  difficultyId: string = '';
   questionStatement: string = '';
-  questionFile: File | null = null;
+  questionFile: any = null;
   questionFileName: string = '';
   options: string = '';
   optionsArray: {
@@ -103,13 +103,13 @@ export class AddQuestionComponent implements OnInit {
   correctOption: any;
   blank: string = '';
   hintStatement: string = '';
-  hintFile: File | null = null;
+  hintFile: any;
   hintFileName: string = '';
-  solutionFile: File | null = null;
+  solutionFile: any;
   solutionFileName: string = '';
-  points: number | undefined = 0;
+  points: any = 0;
   recommendedPoints: number = 0;
-  time: number = 30;
+  time: any = 30;
   tagList: any = [];
   // selectedTags: any = [];
   tagDropdownSettings: IDropdownSettings = {};
@@ -318,10 +318,10 @@ export class AddQuestionComponent implements OnInit {
     } else if (this.CheckFileSize(file)) {
       this.optionsArray[index].file = file.target.files[0];
       this.optionsArray[index].name = file.target.files[0].name;
-      this.optionsArray[index].link = this.getFileLink(
-        'Question Options',
-        file
-      );
+      // this.optionsArray[index].link = this.getFileLink(
+      //   'Question Options',
+      //   file
+      // );
     }
   }
 
@@ -386,7 +386,8 @@ export class AddQuestionComponent implements OnInit {
 
       if (!error) {
         this.disableButton = true;
-        this.UploadFilesToDropbox();
+        this.submit();
+        // this.UploadFilesToDropbox();
       } else {
         console.log(error);
       }
@@ -470,7 +471,7 @@ export class AddQuestionComponent implements OnInit {
       this.optionsArray.forEach((option) => {
         var op = {
           title: option.title,
-          image: option.link,
+          image: option.file,
           imageSource: this.imageSource,
           fileName: option.name,
           correct: option.correct,
@@ -506,26 +507,51 @@ export class AddQuestionComponent implements OnInit {
     let tagid: any[] = [];
     this.selectedTags.forEach((id) => tagid.push(id.id));
     // console.log(tagid);
-    var payload = {
-      courseId: this.courseId,
-      typeId: this.typeId,
-      difficultyId: this.difficultyId,
-      statement: this.questionStatement,
-      duration: this.time,
-      points: this.points,
-      hint: this.hintStatement || '',
-      tagIds: tagid,
-      statementImageSource: this.imageSource,
-      hintFileSource: this.imageSource,
-      solutionFileSource: this.imageSource,
-      statementImage: this.questionFile ? this.statementImageFile : '',
-      hintFile: this.hintFile ? this.hintImageFile : '',
-      solutionFile: this.solutionFile ? this.solutionImageFile : '',
-      statementFileName: this.questionFile ? this.questionFile.name : '',
-      hintFileName: this.hintFile ? this.hintFile.name : '',
-      solutionFileName: this.solutionFile ? this.solutionFile.name : '',
-      options: optionsToSend,
-    };
+
+    var payload = new FormData();
+    payload.append('courseId', this.courseId);
+    payload.append('typeId', this.typeId);
+    payload.append('difficultyId', this.difficultyId);
+    payload.append('statement', this.questionStatement);
+    payload.append('duration', this.time);
+    payload.append('points', this.points);
+    payload.append('hint', this.hintStatement || '');
+    payload.append('tagIds', JSON.stringify(tagid));
+    payload.append('statementImageSource', this.imageSource);
+    payload.append('hintFileSource', this.imageSource);
+    payload.append('solutionFileSource', this.imageSource);
+    payload.append('statementImage', this.questionFile);
+    payload.append('hintFile', this.hintFile);
+    payload.append('solutionFile', this.solutionFile);
+    payload.append('statementFileName', '');
+    payload.append('hintFileName', '');
+    payload.append('solutionFileName', '');
+    payload.append('options', JSON.stringify(optionsToSend));
+
+    optionsToSend.forEach((option: any, key: any) => {
+      payload.append('options-' + key, option.image);
+    });
+
+    // var payload = {
+    //   courseId: this.courseId,
+    //   typeId: this.typeId,
+    //   difficultyId: this.difficultyId,
+    //   statement: this.questionStatement,
+    //   duration: this.time,
+    //   points: this.points,
+    //   hint: this.hintStatement || '',
+    //   tagIds: tagid,
+    //   statementImageSource: this.imageSource,
+    //   hintFileSource: this.imageSource,
+    //   solutionFileSource: this.imageSource,
+    //   statementImage: this.questionFile ? this.statementImageFile : '',
+    //   hintFile: this.hintFile ? this.hintImageFile : '',
+    //   solutionFile: this.solutionFile ? this.solutionImageFile : '',
+    //   statementFileName: this.questionFile ? this.questionFile.name : '',
+    //   hintFileName: this.hintFile ? this.hintFile.name : '',
+    //   solutionFileName: this.solutionFile ? this.solutionFile.name : '',
+    //   options: optionsToSend,
+    // };
 
     if (this.editMode) {
       this.questionService
@@ -600,7 +626,7 @@ export class AddQuestionComponent implements OnInit {
     this.hintStatement = '';
     this.hintFile = null;
     this.hintFileName = '';
-    this.difficultyId = null;
+    this.difficultyId = '';
     this.points = 1;
     this.blank = '';
     this.time = 30;

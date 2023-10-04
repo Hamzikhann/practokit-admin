@@ -1,460 +1,719 @@
 <div *ngIf="!loading" class="content-wrapper">
-    <div class="content-header row">
-        <div class="content-header-left col-md-6 col-12 mb-2">
-            <h3 class="content-header-title mb-0">Questions</h3>
-            <div class="row breadcrumbs-top">
-                <div class="breadcrumb-wrapper col-12">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Home</a></li>
-                        <li class="breadcrumb-item active">Questions</li>
-                    </ol>
-                </div>
-            </div>
+  <div class="content-header row">
+    <div class="content-header-left col-md-6 col-12 mb-2">
+      <h3 class="content-header-title mb-0">Questions</h3>
+      <div class="row breadcrumbs-top">
+        <div class="breadcrumb-wrapper col-12">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="javascript:void(0)" [routerLink]="['/']">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Questions</li>
+          </ol>
         </div>
-        <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
-            <div class="row">
-                <div class="col-sm-7">
-                </div>
-                <div class="col-sm-5">
-                    <div class="actions">
-                        <a class="btn btn-outline-danger btn-block" href="javascript:void(0)" (click)="ResetValues()">
-                            <i class="feather icon-delete mr-1"></i> Reset Question
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    <div class="content-body">
-        <div class="card">
-            <div class="card-content">
-                <div class="card-body">
-                    <div class="card-text">
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Class / Grade / Subject<span class="steric">*</span></p>
-                                <small>Choose the required options</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-md-6 col-12">
-                                        <select class="custom-select form-control" name="gradeDropdown"
-                                            [(ngModel)]="gradeId" (ngModelChange)="getCourses(); courseId=''">
-                                            <option value="" selected disabled>Select a Class</option>
-                                            <option *ngFor="let grade of gradeList" value="{{grade.id}}">{{grade.title}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <select class="custom-select form-control" name="courseDropdown"
-                                            [(ngModel)]="courseId" (ngModelChange)="getTags()"
-                                            [disabled]="!coursesList.length">
-                                            <option value="" selected disabled>Select a Subject</option>
-                                            <option *ngFor="let course of coursesList" value="{{course.id}}">
-                                                {{course.title}}</option>
-                                        </select>
-                                        <span *ngIf="coursesList.length == 0 && gradeId">No Subjects Found</span>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                        <hr>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Question Type<span class="steric">*</span></p>
-                                <small>Please choose the type of question</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-md-3 col-12" *ngFor="let type of questionTypeList">
-                                        <fieldset class="radio">
-                                            <label>
-                                                <input type="radio" name="{{type.title}}" id="{{'type: ' + type.id}}"
-                                                    [(ngModel)]="typeId" (ngModelChange)="setType(type);"
-                                                    value="{{type.id}}"> {{type.title}}
-                                            </label>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                        <hr>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Difficulty Level<span class="steric">*</span></p>
-                                <small>Please choose difficulty level</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-md-3 col-12" *ngFor="let difficulty of difficultyList">
-                                        <fieldset class="radio">
-                                            <label>
-                                                <input type="radio" name="{{difficulty.title}}"
-                                                    id="{{'diff: ' + difficulty.id}}" [(ngModel)]="difficultyId"
-                                                    value="{{difficulty.id}}" (ngModelChange)="setPoints()">
-                                                {{difficulty.title}}
-                                            </label>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                        <hr>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Marks<span class="steric">*</span></p>
-                                <small>Set marks of question</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row align-items-baseline">
-                                    <div class="col-md-4 col-12">
-                                        <input type="number" class="form-control mb-1" name="question"
-                                            [disabled]="difficultyId? false:true" value="{{recommendedPoints}}"
-                                            placeholder="Enter marks here" [(ngModel)]="points" required
-                                            #Points="ngModel" min="1" max="20" oninput="validity.valid ||(value='');">
-                                        <span *ngIf="!difficultyId" class="custom-danger">Select difficulty
-                                            level.</span>
-                                        <span *ngIf="Points.invalid" class="text-warning">* Maximum 20 Marks</span>
-                                    </div>
-                                    <div *ngIf="difficultyId && recommendedPoints != points"
-                                        class="col-md-4 col-12 pl-0">
-                                        <span class="custom-danger">Recommended {{recommendedPoints? recommendedPoints:
-                                            0}} marks for selected difficulty level.</span>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                        <hr>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Statement<span class="steric">*</span></p>
-                                <small>Explain the statement of question</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <textarea class="form-control mb-1" name="question"
-                                            placeholder="Enter question statement here ..."
-                                            [(ngModel)]="questionStatement">
-                                        </textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="statementFile"
-                                                accept=".png, .jpg" (change)="onQuestionInput($event)">
+    <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
+      <div class="row">
+        <div class="col-sm-7"></div>
+        <div class="col-sm-5">
+          <div class="actions">
+            <a
+              class="btn btn-outline-danger btn-block"
+              href="javascript:void(0)"
+              (click)="ResetValues()"
+            >
+              <i class="feather icon-delete mr-1"></i> Reset Question
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content-body">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <div class="card-text">
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">
+                  Class / Grade / Subject<span class="steric">*</span>
+                </p>
+                <small>Choose the required options</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div class="col-md-6 col-12">
+                    <select
+                      class="custom-select form-control"
+                      name="gradeDropdown"
+                      [(ngModel)]="gradeId"
+                      (ngModelChange)="getCourses(); courseId = ''"
+                    >
+                      <option value="" selected disabled>Select a Class</option>
+                      <option
+                        *ngFor="let grade of gradeList"
+                        value="{{ grade.id }}"
+                      >
+                        {{ grade.title }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <select
+                      class="custom-select form-control"
+                      name="courseDropdown"
+                      [(ngModel)]="courseId"
+                      (ngModelChange)="getTags()"
+                      [disabled]="!coursesList.length"
+                    >
+                      <option value="" selected disabled>
+                        Select a Subject
+                      </option>
+                      <option
+                        *ngFor="let course of coursesList"
+                        value="{{ course.id }}"
+                      >
+                        {{ course.title }}
+                      </option>
+                    </select>
+                    <span *ngIf="coursesList.length == 0 && gradeId"
+                      >No Subjects Found</span
+                    >
+                  </div>
+                </div>
+              </dd>
+            </dl>
+            <hr />
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">Question Type<span class="steric">*</span></p>
+                <small>Please choose the type of question</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div
+                    class="col-md-3 col-12"
+                    *ngFor="let type of questionTypeList"
+                  >
+                    <fieldset class="radio">
+                      <label>
+                        <input
+                          type="radio"
+                          name="{{ type.title }}"
+                          id="{{ 'type: ' + type.id }}"
+                          [(ngModel)]="typeId"
+                          (ngModelChange)="setType(type)"
+                          value="{{ type.id }}"
+                        />
+                        {{ type.title }}
+                      </label>
+                    </fieldset>
+                  </div>
+                </div>
+              </dd>
+            </dl>
+            <hr />
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">
+                  Difficulty Level<span class="steric">*</span>
+                </p>
+                <small>Please choose difficulty level</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div
+                    class="col-md-3 col-12"
+                    *ngFor="let difficulty of difficultyList"
+                  >
+                    <fieldset class="radio">
+                      <label>
+                        <input
+                          type="radio"
+                          name="{{ difficulty.title }}"
+                          id="{{ 'diff: ' + difficulty.id }}"
+                          [(ngModel)]="difficultyId"
+                          value="{{ difficulty.id }}"
+                          (ngModelChange)="setPoints()"
+                        />
+                        {{ difficulty.title }}
+                      </label>
+                    </fieldset>
+                  </div>
+                </div>
+              </dd>
+            </dl>
+            <hr />
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">Marks<span class="steric">*</span></p>
+                <small>Set marks of question</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row align-items-baseline">
+                  <div class="col-md-4 col-12">
+                    <input
+                      type="number"
+                      class="form-control mb-1"
+                      name="question"
+                      [disabled]="difficultyId ? false : true"
+                      value="{{ recommendedPoints }}"
+                      placeholder="Enter marks here"
+                      [(ngModel)]="points"
+                      required
+                      #Points="ngModel"
+                      min="1"
+                      max="20"
+                      oninput="validity.valid ||(value='');"
+                    />
+                    <span *ngIf="!difficultyId" class="custom-danger"
+                      >Select difficulty level.</span
+                    >
+                    <span *ngIf="Points.invalid" class="text-warning"
+                      >* Maximum 20 Marks</span
+                    >
+                  </div>
+                  <div
+                    *ngIf="difficultyId && recommendedPoints != points"
+                    class="col-md-4 col-12 pl-0"
+                  >
+                    <span class="custom-danger"
+                      >Recommended
+                      {{ recommendedPoints ? recommendedPoints : 0 }} marks for
+                      selected difficulty level.</span
+                    >
+                  </div>
+                </div>
+              </dd>
+            </dl>
+            <hr />
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">Statement<span class="steric">*</span></p>
+                <small>Explain the statement of question</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div class="col-12">
+                    <textarea
+                      class="form-control mb-1"
+                      name="question"
+                      placeholder="Enter question statement here ..."
+                      [(ngModel)]="questionStatement"
+                    >
+                    </textarea>
+                  </div>
+                  <div class="col-12">
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input"
+                        id="statementFile"
+                        accept=".png, .jpg"
+                        (change)="onQuestionInput($event)"
+                      />
 
-                                            <!-- For Add Mode -->
-                                            <label *ngIf="!editMode" class="custom-file-label customOverflowHidden"
-                                                for="statementFile">
-                                                {{questionFile ? questionFile.name : 'Choose file'}}
-                                                <span class="mb-0"> (Optional)</span>
-                                            </label>
-                                            <!-- For Edit Mode -->
-                                            <label *ngIf="editMode" class="custom-file-label customOverflowHidden"
-                                                for="statementFile">
-                                                {{questionFileName ? questionFileName : 'Choose file'}}
-                                                <span class="mb-0"> (Optional)</span>
-                                            </label>
-                                        </div>
-                                    </div>
+                      <!-- For Add Mode -->
+                      <label
+                        *ngIf="!editMode"
+                        class="custom-file-label customOverflowHidden"
+                        for="statementFile"
+                      >
+                        {{ questionFile ? questionFile.name : "Choose file" }}
+                        <span class="mb-0"> (Optional)</span>
+                      </label>
+                      <!-- For Edit Mode -->
+                      <label
+                        *ngIf="editMode"
+                        class="custom-file-label customOverflowHidden"
+                        for="statementFile"
+                      >
+                        {{
+                          questionFileName ? questionFileName : "Choose file"
+                        }}
+                        <span class="mb-0"> (Optional)</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </dd>
+            </dl>
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">
+                  {{
+                    typeTitle == "MCQ"
+                      ? "Options"
+                      : typeTitle == "Fill in the Blank"
+                      ? "Answer"
+                      : typeTitle
+                  }}<span class="steric">*</span>
+                </p>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div *ngIf="typeTitle == 'MCQ'" class="col-12">
+                    <div class="options">
+                      <div
+                        class="option-item"
+                        *ngFor="let option of optionsArray; let i = index"
+                      >
+                        <div class="row align-items-center">
+                          <div class="col-md-9 col-12">
+                            <div class="option-input-wrap">
+                              <a
+                                href="javascript:;"
+                                class="delete-row"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="Remove Option"
+                                *ngIf="optionsArray.length > 2"
+                                (click)="removeOptions(i)"
+                              >
+                                <i class="fa fa-times"></i>
+                              </a>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="optionsArray[i].title"
+                                placeholder="{{
+                                  'Enter option ' + (i + 1) + ' here'
+                                }}"
+                                [(ngModel)]="optionsArray[i].title"
+                              />
+                              <span>{{ i + 1 }}.</span>
+                              <div class="correct">
+                                <div class="form-check">
+                                  <input
+                                    id="{{ 'option: ' + i + 1 }}"
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="correct"
+                                    [(ngModel)]="correctOption"
+                                    value="{{ i }}"
+                                  />
+                                  <label
+                                    class="form-check-label"
+                                    for="{{ 'option: ' + i + 1 }}"
+                                  >
+                                    Correct Answer
+                                  </label>
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">{{typeTitle == 'MCQ'? 'Options': typeTitle == 'Fill in the Blank'?
-                                    'Answer': typeTitle}}<span class="steric">*</span></p>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div *ngIf="typeTitle == 'MCQ'" class="col-12">
-                                        <div class="options">
-                                            <div class="option-item" *ngFor="let option of optionsArray; let i=index">
-                                                <div class="row align-items-center">
-                                                    <div class="col-md-9 col-12">
-                                                        <div class="option-input-wrap">
-                                                            <a href="javascript:;" class="delete-row"
-                                                                data-toggle="tooltip" data-placement="bottom"
-                                                                title="Remove Option" *ngIf="optionsArray.length > 2"
-                                                                (click)="removeOptions(i)">
-                                                                <i class="fa fa-times"></i>
-                                                            </a>
-                                                            <input type="text" class="form-control"
-                                                                name="optionsArray[i].title"
-                                                                placeholder="{{'Enter option ' + (i + 1) + ' here'}}"
-                                                                [(ngModel)]="optionsArray[i].title">
-                                                            <span>{{i + 1}}.</span>
-                                                            <div class="correct">
-                                                                <div class="form-check">
-                                                                    <input id="{{'option: ' + i + 1}}"
-                                                                        class="form-check-input" type="radio"
-                                                                        name="correct" [(ngModel)]="correctOption"
-                                                                        value="{{i}}">
-                                                                    <label class="form-check-label"
-                                                                        for="{{'option: ' + i + 1}}">
-                                                                        Correct Answer
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3 text-center">
-                                                        <div class="custom-file">
-                                                            <a href="javascript:void(0)">
-                                                                <input class="custom-file-input" #optionFile type="file"
-                                                                    id="{{'option: ' + (i + 1)}}" accept=".png, .jpg"
-                                                                    (change)="onOptionInput($event, i)">
-                                                                <label class="custom-file-label customOverflowHidden"
-                                                                    for="{{'option: ' + (i + 1)}}">
-                                                                    {{optionsArray[i].file || optionsArray[i].name ?
-                                                                    optionsArray[i].name : 'Attach File'}}
-                                                                </label>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="optionsArray.length < 8" class="add-more">
-                                            <button type="button" class="btn customButtonOutline btn-block"
-                                                (click)="AddOption()">Add Option</button>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="typeTitle == 'True/False'" class="col-12">
-                                        <div class="row options">
-                                            <div class="col-3 correct">
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="correct"
-                                                        id="{{'option: 1'}}" value="0" [(ngModel)]="correctOption">
-                                                    <label class="form-check-label" for="{{'option: 1'}}">
-                                                        True
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3 correct">
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" name="correct"
-                                                        id="{{'option: 2'}}" value="1" [(ngModel)]="correctOption">
-                                                    <label class="form-check-label" for="{{'option: 2'}}">
-                                                        False
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="typeTitle == 'Fill in the Blank'" class="col-12">
-                                        <div class="row options">
-                                            <div class="col-4 correct">
-                                                <div class="form-check pl-0">
-                                                    <input type="text" class="form-control mb-1" name="blank"
-                                                        placeholder="Enter answer here" [(ngModel)]="blank"
-                                                        value={{blank}}>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                        <hr>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Topics or Tags<span class="steric">*</span></p>
-                                <small>You can select multiple topics or tags</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div *ngIf="tagList.length != 0" class="col-12">
-                                        <!-- <ng-selectize name="tags" [placeholder]="'Select Topics or Tags'"
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 text-center">
+                            <div class="custom-file">
+                              <a href="javascript:void(0)">
+                                <input
+                                  class="custom-file-input"
+                                  #optionFile
+                                  type="file"
+                                  id="{{ 'option: ' + (i + 1) }}"
+                                  accept=".png, .jpg"
+                                  (change)="onOptionInput($event, i)"
+                                />
+                                <label
+                                  class="custom-file-label customOverflowHidden"
+                                  for="{{ 'option: ' + (i + 1) }}"
+                                >
+                                  {{
+                                    optionsArray[i].file || optionsArray[i].name
+                                      ? optionsArray[i].name
+                                      : "Attach File"
+                                  }}
+                                </label>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="optionsArray.length < 8" class="add-more">
+                      <button
+                        type="button"
+                        class="btn customButtonOutline btn-block"
+                        (click)="AddOption()"
+                      >
+                        Add Option
+                      </button>
+                    </div>
+                  </div>
+                  <div *ngIf="typeTitle == 'True/False'" class="col-12">
+                    <div class="row options">
+                      <div class="col-3 correct">
+                        <div class="form-check">
+                          <input
+                            type="radio"
+                            class="form-check-input"
+                            name="correct"
+                            id="{{ 'option: 1' }}"
+                            value="0"
+                            [(ngModel)]="correctOption"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="{{ 'option: 1' }}"
+                          >
+                            True
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-3 correct">
+                        <div class="form-check">
+                          <input
+                            type="radio"
+                            class="form-check-input"
+                            name="correct"
+                            id="{{ 'option: 2' }}"
+                            value="1"
+                            [(ngModel)]="correctOption"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="{{ 'option: 2' }}"
+                          >
+                            False
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="typeTitle == 'Fill in the Blank'" class="col-12">
+                    <div class="row options">
+                      <div class="col-4 correct">
+                        <div class="form-check pl-0">
+                          <input
+                            type="text"
+                            class="form-control mb-1"
+                            name="blank"
+                            placeholder="Enter answer here"
+                            [(ngModel)]="blank"
+                            value="{{ blank }}"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </dd>
+            </dl>
+            <hr />
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">Topics or Tags<span class="steric">*</span></p>
+                <small>You can select multiple topics or tags</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div *ngIf="tagList.length != 0" class="col-12">
+                    <!-- <ng-selectize name="tags" [placeholder]="'Select Topics or Tags'"
                                             [config]="currentOptionsConfig" [settings]="tagDropdownSettings"
                                             [options]="tagList" [(ngModel)]="selectedTags">
                                         </ng-selectize> -->
-                                        <div class="tags">
-                                            <div class="group-control" (clickOutside)="onClickedOutside($event)">
-                                                <div class="selected">
-                                                    <span *ngFor="let course of selectedTags; let i = index"
-                                                        class="selected-course">
-                                                        {{course.title}}
-                                                        <span class="remove-icon"
-                                                            (click)="removeCourse(i,selectedTags[i],$event)">x</span>
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <input class="form-control border-0 shadow-none" type="text"
-                                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfTags"
-                                                        placeholder="Search for a course" (click)="toggleDropdown()">
-                                                </div>
-                                            </div>
-                                            <div *ngIf="dropdownOpen" class="dropdown position-absolute"
-                                                [ngClass]="{ 'show': dropdownOpen }">
-                                                <ul class="filtered-courses dropdown-menu">
-                                                    <ng-container *ngFor="let filter of filterTags; let i = index">
-                                                        <li class="p-2"
-                                                            (click)="addCourse(filter.title,filter.id,$event)">
-                                                            {{ filter.title }}
-                                                        </li>
-                                                    </ng-container>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="tagList.length == 0" class="col-12">
-                                        <select class="form-control" disabled>
-                                            <option selected disabled>
-                                                <span *ngIf="tagList.length == 0 && gradeId && courseId">No Topics or
-                                                    Tags Found,
-                                                    please add new Topics or Tags.</span>
-                                                <span *ngIf="!gradeId || !courseId">Select Class and Subject.</span>
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <button *ngIf="gradeId && courseId" class="btn w-25 float-right customButtonOutline"
-                                    data-toggle="modal" data-target="#addTagModal">Add New Topics or Tags</button>
-                            </dd>
-                        </dl>
-                        <hr>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Time to Attempt<span class="steric">*</span></p>
-                                <small>Set the time in seconds</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-md-4 col-12">
-                                        <select class="custom-select form-control" [(ngModel)]="time">
-                                            <option *ngFor="let sec of secondsArray" value="{{sec}}">{{sec}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                        <hr>
-
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Hint</p>
-                                <small>Add some hints to the question</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <textarea class="form-control mb-1" name="hint"
-                                            placeholder="Enter hint here ..." [(ngModel)]="hintStatement"></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="hintFile"
-                                                accept=".png, .jpg" (change)="onHintInput($event)">
-                                            <!-- For Add Mode -->
-                                            <label *ngIf="!editMode" class="custom-file-label  customOverflowHidden"
-                                                for="hintFile">
-                                                {{hintFile? hintFile.name : 'Choose file'}}</label>
-                                            <!-- For Edit Mode -->
-                                            <label *ngIf="editMode" class="custom-file-label  customOverflowHidden"
-                                                for="hintFile">{{hintFileName ? hintFileName : 'Choose file'}}</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                        <hr>
-                        <dl class="row">
-                            <dt class="col-sm-3">
-                                <p class="mb-0">Solution</p>
-                                <small>Explain the solution of question</small>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="solutionFile"
-                                                (change)="onSolutionInput($event)">
-                                            <!-- For Add Mode -->
-                                            <label *ngIf="!editMode" class="custom-file-label customOverflowHidden"
-                                                for="solutionFile">
-                                                {{solutionFile ? solutionFile.name : 'Choose file'}}
-                                            </label>
-                                            <!-- For Edit Mode -->
-                                            <label *ngIf="editMode" class="custom-file-label customOverflowHidden"
-                                                for="solutionFile">
-                                                {{solutionFileName ? solutionFileName : 'Choose file'}}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
+                    <div class="tags">
+                      <div
+                        class="group-control"
+                        (clickOutside)="onClickedOutside($event)"
+                      >
+                        <div class="selected">
+                          <span
+                            *ngFor="let course of selectedTags; let i = index"
+                            class="selected-course"
+                          >
+                            {{ course.title }}
+                            <span
+                              class="remove-icon"
+                              (click)="removeCourse(i, selectedTags[i], $event)"
+                              >x</span
+                            >
+                          </span>
+                        </div>
+                        <div>
+                          <input
+                            class="form-control border-0 shadow-none"
+                            type="text"
+                            (input)="onInputChange()"
+                            [(ngModel)]="searchQueryOfTags"
+                            placeholder="Search for a course"
+                            (click)="toggleDropdown()"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="dropdownOpen"
+                        class="dropdown position-absolute"
+                        [ngClass]="{ show: dropdownOpen }"
+                      >
+                        <ul class="filtered-courses dropdown-menu">
+                          <ng-container
+                            *ngFor="let filter of filterTags; let i = index"
+                          >
+                            <li
+                              class="p-2"
+                              (click)="
+                                addCourse(filter.title, filter.id, $event)
+                              "
+                            >
+                              {{ filter.title }}
+                            </li>
+                          </ng-container>
+                        </ul>
+                      </div>
                     </div>
+                  </div>
+                  <div *ngIf="tagList.length == 0" class="col-12">
+                    <select class="form-control" disabled>
+                      <option selected disabled>
+                        <span *ngIf="tagList.length == 0 && gradeId && courseId"
+                          >No Topics or Tags Found, please add new Topics or
+                          Tags.</span
+                        >
+                        <span *ngIf="!gradeId || !courseId"
+                          >Select Class and Subject.</span
+                        >
+                      </option>
+                    </select>
+                  </div>
                 </div>
-                <div class="card-footer text-right">
-                    <button type="button" class="btn btn-primary w-25" (click)="emptyChecks()"
-                        [disabled]="disableButton? true:false">Save changes</button>
+                <button
+                  *ngIf="gradeId && courseId"
+                  class="btn w-25 float-right customButtonOutline"
+                  data-toggle="modal"
+                  data-target="#addTagModal"
+                >
+                  Add New Topics or Tags
+                </button>
+              </dd>
+            </dl>
+            <hr />
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">Time to Attempt<span class="steric">*</span></p>
+                <small>Set the time in seconds</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div class="col-md-4 col-12">
+                    <select
+                      class="custom-select form-control"
+                      [(ngModel)]="time"
+                    >
+                      <option *ngFor="let sec of secondsArray" [value]="sec">
+                        {{ sec }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
-            </div>
+              </dd>
+            </dl>
+            <hr />
+
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">Hint</p>
+                <small>Add some hints to the question</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div class="col-12">
+                    <textarea
+                      class="form-control mb-1"
+                      name="hint"
+                      placeholder="Enter hint here ..."
+                      [(ngModel)]="hintStatement"
+                    ></textarea>
+                  </div>
+                  <div class="col-12">
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input"
+                        id="hintFile"
+                        accept=".png, .jpg"
+                        (change)="onHintInput($event)"
+                      />
+                      <!-- For Add Mode -->
+                      <label
+                        *ngIf="!editMode"
+                        class="custom-file-label customOverflowHidden"
+                        for="hintFile"
+                      >
+                        {{ hintFile ? hintFile.name : "Choose file" }}</label
+                      >
+                      <!-- For Edit Mode -->
+                      <label
+                        *ngIf="editMode"
+                        class="custom-file-label customOverflowHidden"
+                        for="hintFile"
+                        >{{
+                          hintFileName ? hintFileName : "Choose file"
+                        }}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </dd>
+            </dl>
+            <hr />
+            <dl class="row">
+              <dt class="col-sm-3">
+                <p class="mb-0">Solution</p>
+                <small>Explain the solution of question</small>
+              </dt>
+              <dd class="col-sm-9">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input"
+                        id="solutionFile"
+                        (change)="onSolutionInput($event)"
+                      />
+                      <!-- For Add Mode -->
+                      <label
+                        *ngIf="!editMode"
+                        class="custom-file-label customOverflowHidden"
+                        for="solutionFile"
+                      >
+                        {{ solutionFile ? solutionFile.name : "Choose file" }}
+                      </label>
+                      <!-- For Edit Mode -->
+                      <label
+                        *ngIf="editMode"
+                        class="custom-file-label customOverflowHidden"
+                        for="solutionFile"
+                      >
+                        {{
+                          solutionFileName ? solutionFileName : "Choose file"
+                        }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </dd>
+            </dl>
+          </div>
         </div>
+        <div class="card-footer text-right">
+          <button
+            type="button"
+            class="btn btn-primary w-25"
+            (click)="emptyChecks()"
+            [disabled]="disableButton ? true : false"
+          >
+            Save changes
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-
 <div *ngIf="disableButton" class="spinner_overlay">
-    <div style="position: unset; width: 100%; height: 100%;">
-        <div class="row align-items-center justify-content-center" style="width: 100%;height: 100%;">
-            <img src="assets/app-assets/images/loading2.gif" alt="">
-            <div class="spinner_overlay"></div>
-        </div>
+  <div style="position: unset; width: 100%; height: 100%">
+    <div
+      class="row align-items-center justify-content-center"
+      style="width: 100%; height: 100%"
+    >
+      <img src="assets/app-assets/images/loading2.gif" alt="" />
+      <div class="spinner_overlay"></div>
     </div>
+  </div>
 </div>
 
 <!-- Add New Tag-->
-<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" aria-labelledby="addTagModalTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addTagModalTitle">Add New Topic or Tag</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetAddTag()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body m-1">
-                <div class="row">
-                    <div class="col-md-6 col-12">
-                        <select class="custom-select form-control mb-1" name="gradeList" id="GradeDropdown" disabled>
-                            <option *ngFor="let grade of gradeList" value="{{grade.id}}"
-                                [selected]="grade.id==gradeId? true: false">
-                                {{grade.title}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 col-12">
-                        <select class="custom-select form-control mb-1" name="coursesList" id="CoursesDropdown"
-                            disabled>
-                            <option *ngFor="let course of coursesList" value="{{course.id}}"
-                                [selected]="course.id==courseId? true: false">
-                                {{course.title}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="input-group mb-1">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="new-tag"><i class="feather icon-link"></i></span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Input topic or tag"
-                                aria-describedby="new-tag" [(ngModel)]="addTag.title">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 text-right">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal"
-                            (click)="AddTag()">Add</button>
-                    </div>
-                </div>
-            </div>
+<div
+  class="modal fade"
+  id="addTagModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addTagModalTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTagModalTitle">Add New Topic or Tag</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="resetAddTag()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body m-1">
+        <div class="row">
+          <div class="col-md-6 col-12">
+            <select
+              class="custom-select form-control mb-1"
+              name="gradeList"
+              id="GradeDropdown"
+              disabled
+            >
+              <option
+                *ngFor="let grade of gradeList"
+                value="{{ grade.id }}"
+                [selected]="grade.id == gradeId ? true : false"
+              >
+                {{ grade.title }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6 col-12">
+            <select
+              class="custom-select form-control mb-1"
+              name="coursesList"
+              id="CoursesDropdown"
+              disabled
+            >
+              <option
+                *ngFor="let course of coursesList"
+                value="{{ course.id }}"
+                [selected]="course.id == courseId ? true : false"
+              >
+                {{ course.title }}
+              </option>
+            </select>
+          </div>
         </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="input-group mb-1">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="new-tag"
+                  ><i class="feather icon-link"></i
+                ></span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Input topic or tag"
+                aria-describedby="new-tag"
+                [(ngModel)]="addTag.title"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-right">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-dismiss="modal"
+              (click)="AddTag()"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

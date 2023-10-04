@@ -6,6 +6,7 @@ import { QuizAttemptService } from 'src/app/services/quizAttempt/quiz-attempt.se
 import { CourseService } from 'src/app/services/course/course.service';
 import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
+import { HelperService } from 'src/app/services/helper/helper.service';
 
 // import { Dropbox } from 'dropbox';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -64,7 +65,7 @@ export class AttemptComponent implements OnInit, OnDestroy {
     private quizService: QuizService,
     private quizAttemptService: QuizAttemptService,
     private courseService: CourseService,
-
+    private helperService: HelperService,
     private sanitizer: DomSanitizer
   ) {}
 
@@ -157,148 +158,230 @@ export class AttemptComponent implements OnInit, OnDestroy {
   loadImage() {
     // var dbx = new Dropbox({ accessToken: environment.dropBoxToken });
 
-    // if (
-    //   this.questions[this.currentQuestionIndex].questionsAttribute
-    //     .statementImage
-    // ) {
-    //   dbx
-    //     .filesDownload({
-    //       path: this.questions[this.currentQuestionIndex].questionsAttribute
-    //         .statementImage,
-    //     })
-    //     .then((res: any) => {
-    //       this.safeUrl = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       console.log('got error:', error);
-    //       this.safeUrl = '';
-    //     });
-    // }
+    if (
+      this.questions[this.currentQuestionIndex].questionsAttribute
+        .statementImage
+    ) {
+      this.helperService
+        .getFileSafeUrl({
+          file: this.questions[this.currentQuestionIndex].questionsAttribute
+            .statementImage,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.safeUrl = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({
+      //       path: this.questions[this.currentQuestionIndex].questionsAttribute
+      //         .statementImage,
+      //     })
+      //     .then((res: any) => {
+      //       this.safeUrl = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       console.log('got error:', error);
+      //       this.safeUrl = '';
+      //     });
+    }
 
     var options = this.questions[this.currentQuestionIndex].questionsOptions;
-    // if (options[0]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[0].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[0] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[0] = '';
-    //       console.log('0 got error:', error);
-    //     });
-    // }
-    // if (options[1]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[1].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[1] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[1] = '';
-    //       console.log('1 got error:', error);
-    //     });
-    // }
-    // if (options[2]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[2].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[2] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[2] = '';
-    //       console.log('2 got error:', error);
-    //     });
-    // }
-    // if (options[3]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[3].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[3] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[3] = '';
-    //       console.log('3 got error:', error);
-    //     });
-    // }
-    // if (options[4]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[4].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[4] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[4] = '';
-    //       console.log('4 got error:', error);
-    //     });
-    // }
-    // if (options[5]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[5].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[5] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[5] = '';
-    //       console.log('5 got error:', error);
-    //     });
-    // }
-    // if (options[6]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[6].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[6] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[6] = '';
-    //       console.log('6 got error:', error);
-    //     });
-    // }
-    // if (options[7]?.image) {
-    //   dbx
-    //     .filesDownload({ path: options[7].image })
-    //     .then((res: any) => {
-    //       this.optionsSafeUrl[7] = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       this.optionsSafeUrl[7] = '';
-    //       console.log('7 got error:', error);
-    //     });
-    // }
+    if (options[0]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[0]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[0] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[0].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[0] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[0] = '';
+      //       console.log('0 got error:', error);
+      //     });
+    }
+    if (options[1]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[1]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[1] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[1].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[1] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[1] = '';
+      //       console.log('1 got error:', error);
+      //     });
+    }
+    if (options[2]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[2]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[2] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[2].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[2] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[2] = '';
+      //       console.log('2 got error:', error);
+      //     });
+    }
+    if (options[3]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[3]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[3] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[3].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[3] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[3] = '';
+      //       console.log('3 got error:', error);
+      //     });
+    }
+    if (options[4]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[4]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[4] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[4].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[4] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[4] = '';
+      //       console.log('4 got error:', error);
+      //     });
+    }
+    if (options[5]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[5]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[5] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[5].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[5] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[5] = '';
+      //       console.log('5 got error:', error);
+      //     });
+    }
+    if (options[6]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[6]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[6] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[6].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[6] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[6] = '';
+      //       console.log('6 got error:', error);
+      //     });
+    }
+    if (options[7]?.image) {
+      this.helperService
+        .getFileSafeUrl({
+          file: options[7]?.image,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.optionsSafeUrl[7] = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({ path: options[7].image })
+      //     .then((res: any) => {
+      //       this.optionsSafeUrl[7] = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       this.optionsSafeUrl[7] = '';
+      //       console.log('7 got error:', error);
+      //     });
+    }
 
-    // if (this.questions[this.currentQuestionIndex].questionsAttribute.hintFile) {
-    //   dbx
-    //     .filesDownload({
-    //       path: this.questions[this.currentQuestionIndex].questionsAttribute
-    //         .hintFile,
-    //     })
-    //     .then((res: any) => {
-    //       this.hintSafeUrl = this.sanitizer.bypassSecurityTrustUrl(
-    //         window.URL.createObjectURL(res.result.fileBlob)
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       console.log('got error:', error);
-    //       this.hintSafeUrl = null;
-    //     });
-    // }
+    if (this.questions[this.currentQuestionIndex].questionsAttribute.hintFile) {
+      this.helperService
+        .getFileSafeUrl({
+          file: this.questions[this.currentQuestionIndex].questionsAttribute
+            .hintFile,
+        })
+        .subscribe((res: any) => {
+          const response = res.body;
+          this.hintSafeUrl = response.safeUrl;
+        });
+      //   dbx
+      //     .filesDownload({
+      //       path: this.questions[this.currentQuestionIndex].questionsAttribute
+      //         .hintFile,
+      //     })
+      //     .then((res: any) => {
+      //       this.hintSafeUrl = this.sanitizer.bypassSecurityTrustUrl(
+      //         window.URL.createObjectURL(res.result.fileBlob)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       console.log('got error:', error);
+      //       this.hintSafeUrl = null;
+      //     });
+    }
   }
 
   startTime() {
