@@ -293,11 +293,9 @@
                         <!-- <ng-selectize name="classes" [placeholder]="'Select Single or Multiple Students'"
                             [config]="multipleOptionsConfig" [options]="studentsList" [(ngModel)]="assignToList">
                         </ng-selectize> -->
-
                         <div class="tags">
                             <div class="group-control" (clickOutside)="onClickedOutside($event)">
                                 <div class="selected">
-
                                     <span *ngFor="let student of selectedStudents; let i = index"
                                         class="selected-course">
                                         {{student.label}}
@@ -305,16 +303,12 @@
                                             (click)="removeCourse(i,selectedStudents[i],$event)">x</span>
                                     </span>
                                 </div>
-                                <div>
-
-
-                                    <input class="form-control border-0 shadow-none" type="text"
-                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfStudents"
-                                        placeholder="Search for a course" (click)="toggleDropdown()">
-                                </div>
+                                <input class="form-control border-0 shadow-none" type="text" (input)="onInputChange()"
+                                    [(ngModel)]="searchQueryOfStudents" placeholder="Search for a course"
+                                    (click)="toggleDropdown()">
                             </div>
 
-                            <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                            <div *ngIf="dropdownOpen" class="dropdown group-control-dropdown"
                                 [ngClass]="{ 'show': dropdownOpen }">
                                 <ul class="filtered-courses dropdown-menu">
 

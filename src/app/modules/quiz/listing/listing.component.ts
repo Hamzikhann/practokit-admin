@@ -83,9 +83,7 @@ export class ListingComponent implements OnInit {
           assessment.uniqueAssignTos = assignSet;
         }
       );
-      console.log(res.body);
       this.filteredAssessmentList = this.assessmentList = res.body;
-      console.log(this.filteredAssessmentList);
       this.loading = false;
     });
   }

@@ -771,7 +771,6 @@ export class BuilderComponent implements OnInit {
 
   removeCourse(index: number, cour: any, event: any) {
     event.stopPropagation();
-    console.log(cour);
     this.selectedTags.splice(index, 1);
     let newcour = {
       label: cour,
@@ -811,11 +810,9 @@ export class BuilderComponent implements OnInit {
     this.dropdownOpen = !this.dropdownOpen;
   }
   onClickedOutside(event: any) {
-    console.log(event);
     if (event) {
       this.dropdownOpen = false;
     } else {
-      console.log('hi');
       this.dropdownOpen = !this.dropdownOpen;
     }
   }
@@ -880,11 +877,9 @@ export class BuilderComponent implements OnInit {
   }
 
   onClickedOutsideforDiffculty(event: any) {
-    console.log(event);
     if (event) {
       this.dropdownOpenOfDifficulty = false;
     } else {
-      console.log('hi');
       this.dropdownOpenOfDifficulty = !this.dropdownOpenOfDifficulty;
     }
   }

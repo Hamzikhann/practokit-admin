@@ -226,7 +226,6 @@ export class UserListingComponent implements OnInit {
       selectedCourseids.push(e.courseId)
     );
 
-    console.log(selectedCourseids);
     var payload = {
       role: this.rolesList[
         this.rolesList
@@ -388,11 +387,9 @@ export class UserListingComponent implements OnInit {
     this.dropdownOpen = !this.dropdownOpen;
   }
   onClickedOutside(event: any) {
-    console.log(event);
     if (event) {
       this.dropdownOpen = false;
     } else {
-      console.log('hi');
       this.dropdownOpen = !this.dropdownOpen;
     }
   }

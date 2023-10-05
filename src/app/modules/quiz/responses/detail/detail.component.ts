@@ -6,6 +6,7 @@ import { environment } from '../../../../../environments/environment';
 
 // import { Dropbox } from 'dropbox';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { HelperService } from 'src/app/services/helper/helper.service';
 
 @Component({
   selector: 'app-detail',
@@ -18,11 +19,14 @@ export class DetailComponent implements OnInit {
   quizId: string | null = '';
   submission: any;
   response: any;
+  safeUrl: any;
+  optionSafeUrl: any = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private submissionService: SubmissionService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private helperService: HelperService
   ) {}
 
   ngOnInit(): void {
@@ -40,49 +44,37 @@ export class DetailComponent implements OnInit {
           this.submission.quizSubmissionResponse.response
         );
 
-        this.response.forEach(
-          async (question: {
-            questionsAttribute: { statementImage: any };
-            statementImage: SafeUrl;
-            questionType: { title: string };
-            questionsOptions: any[];
-          }) => {
-            // if (question?.questionsAttribute?.statementImage) {
-            //   var res: any = await Promise.all([
-            //     dbx
-            //       .filesDownload({
-            //         path: question.questionsAttribute.statementImage,
-            //       })
-            //       .then((res: any) => {
-            //         question.statementImage =
-            //           this.sanitizer.bypassSecurityTrustUrl(
-            //             window.URL.createObjectURL(res.result.fileBlob)
-            //           );
-            //       }),
-            //   ]);
-            // }
-            // if (question?.questionType.title == 'MCQ') {
-            //   if (question?.questionsOptions) {
-            //     question.questionsOptions.forEach(async (option) => {
-            //       if (option?.image) {
-            //         var res: any = await Promise.all([
-            //           dbx
-            //             .filesDownload({
-            //               path: option.image,
-            //             })
-            //             .then((res: any) => {
-            //               option.imageUrl =
-            //                 this.sanitizer.bypassSecurityTrustUrl(
-            //                   window.URL.createObjectURL(res.result.fileBlob)
-            //                 );
-            //             }),
-            //         ]);
-            //       }
-            //     });
-            //   }
-            // }
+        // console.log(this.response);
+        this.response.forEach(async (question: any) => {
+          // console.log(question);
+          if (question?.questionsAttribute?.statementImage) {
+            // console.log(question?.questionsAttribute?.statementImage);
+            this.helperService
+              .getFileSafeUrl({
+                file: question?.questionsAttribute?.statementImage,
+              })
+              .subscribe((e: any) => {
+                const response = e.body;
+                question.questionsAttribute.imageSrc = response.safeUrl;
+              });
           }
-        );
+          if (question?.questionType.title == 'MCQ') {
+            if (question?.questionsOptions) {
+              question.questionsOptions.forEach(
+                async (option: { image: any; imageSrc: any }, index: any) => {
+                  if (option?.image) {
+                    this.helperService
+                      .getFileSafeUrl({ file: option?.image })
+                      .subscribe((e: any) => {
+                        const response = e.body;
+                        option.imageSrc = response.safeUrl;
+                      });
+                  }
+                }
+              );
+            }
+          }
+        });
         this.loading = false;
       });
   }

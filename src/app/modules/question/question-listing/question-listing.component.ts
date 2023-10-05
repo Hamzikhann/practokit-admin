@@ -159,6 +159,7 @@ export class QuestionListingComponent implements OnInit {
         })
         .subscribe((res: any) => {
           const response = res.body;
+          // console.log(response);
           this.safeUrl = response.safeUrl;
         });
 

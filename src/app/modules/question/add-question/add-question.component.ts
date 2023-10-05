@@ -103,9 +103,9 @@ export class AddQuestionComponent implements OnInit {
   correctOption: any;
   blank: string = '';
   hintStatement: string = '';
-  hintFile: any;
+  hintFile: any = null;
   hintFileName: string = '';
-  solutionFile: any;
+  solutionFile: any = null;
   solutionFileName: string = '';
   points: any = 0;
   recommendedPoints: number = 0;
@@ -114,9 +114,9 @@ export class AddQuestionComponent implements OnInit {
   // selectedTags: any = [];
   tagDropdownSettings: IDropdownSettings = {};
   secondsArray = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300];
-  statementImageFile: any;
-  hintImageFile: any;
-  solutionImageFile: any;
+  statementImageFile: any = null;
+  hintImageFile: any = null;
+  solutionImageFile: any = null;
   currentOptions: any;
   addTag: {
     title: string;
@@ -507,7 +507,7 @@ export class AddQuestionComponent implements OnInit {
     let tagid: any[] = [];
     this.selectedTags.forEach((id) => tagid.push(id.id));
     // console.log(tagid);
-
+    // console.log(optionsToSend);
     var payload = new FormData();
     payload.append('courseId', this.courseId);
     payload.append('typeId', this.typeId);
@@ -520,15 +520,24 @@ export class AddQuestionComponent implements OnInit {
     payload.append('statementImageSource', this.imageSource);
     payload.append('hintFileSource', this.imageSource);
     payload.append('solutionFileSource', this.imageSource);
-    payload.append('statementImage', this.questionFile);
-    payload.append('hintFile', this.hintFile);
-    payload.append('solutionFile', this.solutionFile);
+
+    if (this.questionFile) {
+      payload.append('statementImage', this.questionFile);
+    }
+    if (this.hintFile) {
+      payload.append('hintFile', this.hintFile);
+    }
+    if (this.solutionFile) {
+      payload.append('solutionFile', this.solutionFile);
+    }
+
     payload.append('statementFileName', '');
     payload.append('hintFileName', '');
     payload.append('solutionFileName', '');
     payload.append('options', JSON.stringify(optionsToSend));
 
     optionsToSend.forEach((option: any, key: any) => {
+      // console.log(key);
       payload.append('options-' + key, option.image);
     });
 
@@ -723,11 +732,10 @@ export class AddQuestionComponent implements OnInit {
     this.dropdownOpen = !this.dropdownOpen;
   }
   onClickedOutside(event: any) {
-    console.log(event);
+    // console.log(event);
     if (event) {
       this.dropdownOpen = false;
     } else {
-      console.log('hi');
       this.dropdownOpen = !this.dropdownOpen;
     }
   }

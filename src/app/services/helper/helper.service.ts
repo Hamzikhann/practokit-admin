@@ -14,7 +14,7 @@ export class HelperService {
   constructor(private http: HttpClient) {}
 
   getFileSafeUrl(payload: any) {
-    return this.http.post(this.baseUrl, payload, {
+    return this.http.post(this.baseUrl + 'questions/image', payload, {
       observe: 'response',
     });
   }

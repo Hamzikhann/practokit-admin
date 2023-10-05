@@ -104,7 +104,7 @@ export class DetailComponent implements OnInit {
     this.quizService.getQuizDetail(this.quizId).subscribe((res) => {
       // console.log(res.body);
       this.quiz = res.body;
-      console.log(this.quiz);
+      // console.log(this.quiz);
       this.questionsType = new Set();
       var totalTime = 0;
 
@@ -435,7 +435,7 @@ export class DetailComponent implements OnInit {
       this.quizService
         .assignAssessment(this.quizId, payload)
         .subscribe((res) => {
-          this.toastr.success(`Assessment Assigned to Students! ${res}`);
+          this.toastr.success(`Assessment Assigned to Students!`);
           let clk: any = document.getElementById('dismissAssignModal');
           clk.click();
           this.resetAssignToList();
@@ -531,11 +531,9 @@ export class DetailComponent implements OnInit {
     this.dropdownOpen = !this.dropdownOpen;
   }
   onClickedOutside(event: any) {
-    console.log(event);
     if (event) {
       this.dropdownOpen = false;
     } else {
-      console.log('hi');
       this.dropdownOpen = !this.dropdownOpen;
     }
   }

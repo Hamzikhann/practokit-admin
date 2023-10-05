@@ -126,7 +126,6 @@
                                                 <div class="group-control"
                                                     (clickOutside)="onClickedOutsideforDiffculty($event)">
                                                     <div class="selected">
-
                                                         <span
                                                             *ngFor="let difficulty of selectedDifficulty; let i = index"
                                                             class="selected-course">
@@ -135,24 +134,18 @@
                                                                 (click)="removeDifficulty(i,selectedDifficulty[i],$event)">x</span>
                                                         </span>
                                                     </div>
-                                                    <div>
-
-
-                                                        <input class="form-control border-0 shadow-none" type="text"
-                                                            (input)="onInputDifficulty()"
-                                                            [(ngModel)]="searchQueryOfDifficulty"
-                                                            placeholder="Search for a difficulty"
-                                                            (click)="toggleDropdownOfDifficulty()">
-                                                    </div>
+                                                    <input class="form-control border-0 shadow-none" type="text"
+                                                        (input)="onInputDifficulty()"
+                                                        [(ngModel)]="searchQueryOfDifficulty"
+                                                        placeholder="Search for a difficulty"
+                                                        (click)="toggleDropdownOfDifficulty()">
                                                 </div>
-
-                                                <div *ngIf="dropdownOpenOfDifficulty" class="dropdown position-absolute"
+                                                <div *ngIf="dropdownOpenOfDifficulty"
+                                                    class="dropdown group-control-dropdown"
                                                     [ngClass]="{ 'show': dropdownOpenOfDifficulty }">
                                                     <ul class="filtered-courses dropdown-menu">
-
                                                         <ng-container
                                                             *ngFor="let filter of filterDifficulty; let i = index">
-
                                                             <li class="p-2"
                                                                 (click)="addDifficulty(filter.label,$event)">
                                                                 {{ filter.label }}
@@ -173,7 +166,6 @@
                                             <div class="tags">
                                                 <div class="group-control" (clickOutside)="onClickedOutside($event)">
                                                     <div class="selected">
-
                                                         <span *ngFor="let course of selectedTags; let i = index"
                                                             class="selected-course">
                                                             {{course}}
@@ -181,22 +173,14 @@
                                                                 (click)="removeCourse(i,selectedTags[i],$event)">x</span>
                                                         </span>
                                                     </div>
-                                                    <div>
-
-
-                                                        <input class="form-control border-0 shadow-none" type="text"
-                                                            (input)="onInputChange()" [(ngModel)]="searchQueryOfTags"
-                                                            placeholder="Search for a course"
-                                                            (click)="toggleDropdown()">
-                                                    </div>
+                                                    <input class="form-control border-0 shadow-none" type="text"
+                                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfTags"
+                                                        placeholder="Search for a course" (click)="toggleDropdown()">
                                                 </div>
-
-                                                <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                                                <div *ngIf="dropdownOpen" class="dropdown group-control-dropdown"
                                                     [ngClass]="{ 'show': dropdownOpen }">
                                                     <ul class="filtered-courses dropdown-menu">
-
                                                         <ng-container *ngFor="let filter of filterTags; let i = index">
-
                                                             <li class="p-2" (click)="addCourse(filter.label,$event)">
                                                                 {{ filter.label }}
                                                             </li>

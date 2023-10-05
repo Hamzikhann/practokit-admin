@@ -150,21 +150,14 @@
                                             (click)="removeCourse(i,selectedClassCourses[i],$event)">x</span>
                                     </span>
                                 </div>
-                                <div>
-
-
-                                    <input class="form-control border-0 shadow-none" type="text"
-                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfClassCourses"
-                                        placeholder="Search for a course" (click)="toggleDropdown()">
-                                </div>
+                                <input class="form-control border-0 shadow-none" type="text" (input)="onInputChange()"
+                                    [(ngModel)]="searchQueryOfClassCourses" placeholder="Search for a course"
+                                    (click)="toggleDropdown()">
                             </div>
-
-                            <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                            <div *ngIf="dropdownOpen" class="dropdown group-control-dropdown"
                                 [ngClass]="{ 'show': dropdownOpen }">
                                 <ul class="filtered-courses dropdown-menu">
-
                                     <ng-container *ngFor="let filter of filterClassCourses; let i = index">
-
                                         <li class="p-2" (click)="addCourse(filter.title,filter.courseId,$event)">
                                             {{ filter.title }}
                                         </li>
@@ -249,21 +242,14 @@
                                             (click)="removeCourse(i,selectedClassCourses[i],$event)">x</span>
                                     </span>
                                 </div>
-                                <div>
-
-
-                                    <input class="form-control border-0 shadow-none" type="text"
-                                        (input)="onInputChange()" [(ngModel)]="searchQueryOfClassCourses"
-                                        placeholder="Search for a course" (click)="toggleDropdown()">
-                                </div>
+                                <input class="form-control border-0 shadow-none" type="text" (input)="onInputChange()"
+                                    [(ngModel)]="searchQueryOfClassCourses" placeholder="Search for a course"
+                                    (click)="toggleDropdown()">
                             </div>
-
-                            <div *ngIf="dropdownOpen" class="dropdown position-absolute"
+                            <div *ngIf="dropdownOpen" class="dropdown group-control-dropdown"
                                 [ngClass]="{ 'show': dropdownOpen }">
                                 <ul class="filtered-courses dropdown-menu">
-
                                     <ng-container *ngFor="let filter of filterClassCourses; let i = index">
-
                                         <li class="p-2" (click)="addCourse(filter.title,filter.courseId,$event)">
                                             {{ filter.title }}
                                         </li>

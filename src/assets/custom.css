@@ -10,130 +10,217 @@ PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
 
 .main-menu.menu-dark .navigation .navigation-header span {
-    font-weight: bold;
+  font-weight: bold;
 }
 .main-menu.menu-dark .navigation .navigation-header {
-    padding: 24px 20px;
+  padding: 24px 20px;
 }
 .card-header {
-    padding: 1rem;
+  padding: 1rem;
 }
 .card-header .heading-elements {
-    top: 10px;
-    right: 12px;
+  top: 10px;
+  right: 12px;
 }
 .content-header .filters {
-    display: flex;
+  display: flex;
 }
 .content-header .filters select {
-    width: 100%;
+  width: 100%;
 }
 .custom-select:disabled {
-    color: #54575a;
-    background-color: #eceff1;
+  color: #54575a;
+  background-color: #eceff1;
 }
 .confirm-msg {
-    margin: 8px 0;
-    color: red;
+  margin: 8px 0;
+  color: red;
 }
 .dataTables_wrapper div.dataTables_paginate .paginate_button {
-    margin: 0 4px !important;
+  margin: 0 4px !important;
 }
-.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-    color: #fff !important;
-    background: #404e67 !important;
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  color: #fff !important;
+  background: #404e67 !important;
 }
 .text-bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 .nav-item i {
-    margin-right: 1rem;
+  margin-right: 1rem;
 }
-table.dataTable tbody th, table.dataTable tbody td {
-    padding: 10px 16px;
-    font-size: 14px;
-    text-transform: capitalize;
-    line-height: 24px;
+table.dataTable tbody th,
+table.dataTable tbody td {
+  padding: 10px 16px;
+  font-size: 14px;
+  text-transform: capitalize;
+  line-height: 24px;
 }
 .blank-page .content-wrapper .flexbox-container {
-    height: calc(var(--vh, 1vh) * 80);
+  height: calc(var(--vh, 1vh) * 80);
 }
 
 .main-menu.menu-dark .navigation > li.active > a {
-    color: #fff;
+  color: #fff;
 }
 
 .option-item .option-input-wrap:hover .delete-row {
-    display: block;
+  display: block;
 }
 .option-item .option-input-wrap .delete-row {
-    color: #DD4B39;
-    position: absolute;
-    left: -41px;
-    width: 45px;
-    display: none;
+  color: #dd4b39;
+  position: absolute;
+  left: -41px;
+  width: 45px;
+  display: none;
 }
 .option-item .option-input-wrap .delete-row i {
-    font-size: 40px;
+  font-size: 40px;
 }
 .pointer {
-    cursor: pointer
+  cursor: pointer;
 }
-.customOverflowHidden{
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.customOverflowHidden {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .steric {
-    color: rgb(240, 86, 89) !important;
-    margin-left: 5px;
-    font-size: 17px;
+  color: rgb(240, 86, 89) !important;
+  margin-left: 5px;
+  font-size: 17px;
 }
 .mr-6 {
-    margin-right: 5rem !important;
+  margin-right: 5rem !important;
 }
 .formControlPositionIconRight {
-    position: absolute;
-    top: 4px;
-    right: 0;
-    z-index: 2;
-    display: block;
-    width: 2.5rem;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    text-align: center;
-    cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 0;
+  z-index: 2;
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  text-align: center;
+  cursor: pointer;
 }
 .w-20 {
-    width: 20%;
+  width: 20%;
 }
 .card-header .card-title {
-    text-transform: capitalize;
-    font-weight: normal;
+  text-transform: capitalize;
+  font-weight: normal;
 }
 .mr-05px {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 .ngx-pagination {
-    padding-left: 0 !important;
+  padding-left: 0 !important;
 }
 .ngx-pagination .current {
-    background: #404e67 !important;
-    border-radius: 4px !important;
+  background: #404e67 !important;
+  border-radius: 4px !important;
 }
 .disable-text-selection {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 @media print {
-    html, body {
-       display: none;  /* hide whole page */
-    }
+  html,
+  body {
+    display: none; /* hide whole page */
+  }
 }
 .dataTables_length {
-    display: none;
+  display: none;
+}
+
+.group-control {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+.group-control .selected {
+  display: flex;
+}
+.group-control .selected-course {
+  background-color: lightgray;
+  color: #302f2f;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  padding: 4px 12px;
+  margin: 3px;
+  text-transform: capitalize;
+  text-wrap: nowrap;
+}
+.group-control .selected-course .remove-icon {
+  cursor: pointer;
+  margin-left: 4px;
+  font-weight: bold;
+  padding-left: 3px;
+}
+.group-control .selected-course .remove-icon:hover {
+  color: #fff;
+}
+.group-control input.form-control {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.group-control-dropdown .filtered-courses {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.group-control-dropdown .filtered-courses li {
+  margin: 0;
+  padding: 8px 12px;
+}
+
+.group-control-dropdown.show {
+  display: block;
+  margin-top: 0px;
+  width: 100%;
+  position: absolute;
+  bottom: 13px;
+}
+
+.group-control-dropdown .dropdown-menu {
+  display: none;
+}
+
+.group-control-dropdown.show .dropdown-menu {
+  display: block;
+  position: absolute;
+  background-color: #f1eeee;
+  border: 1px solid rgba(245, 242, 242, 0.15);
+  box-shadow: 0 3px 5px rgba(80, 2, 2, 0.1);
+}
+
+.group-control-dropdown .dropdown-menu .custom-control {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.group-control-dropdown .dropdown-menu .custom-control-indicator {
+  margin-right: 8px;
+}
+
+.group-control-dropdown .filtered-courses li:hover {
+  background-color: #c5c4c4; /* Change to your desired background color */
+  cursor: pointer;
 }
