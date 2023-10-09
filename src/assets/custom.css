@@ -152,7 +152,9 @@ table.dataTable tbody td {
 }
 .group-control .selected {
   display: flex;
+  flex-wrap: wrap;
 }
+
 .group-control .selected-course {
   background-color: lightgray;
   color: #302f2f;

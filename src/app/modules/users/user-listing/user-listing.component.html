@@ -129,6 +129,15 @@
                         </div>
                     </div>
                     <div class="col-12">
+                        <div class="input-group mb-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="new-tag"><i class="feather icon-lock"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Input user password" id="newPassword"
+                                name="newPassword" aria-describedby="new-tag" [(ngModel)]="addUser.password">
+                        </div>
+                    </div>
+                    <div class="col-12">
                         <select class="custom-select form-control mb-1" name="role" id="role" [(ngModel)]="addUser.role"
                             (ngModelChange)="changeRole(addUser.role);">
                             <option value="" selected disabled>Select Role</option>

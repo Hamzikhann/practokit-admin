@@ -64,8 +64,9 @@ export class UserListingComponent implements OnInit {
     firstName: string;
     lastName: string;
     email: string;
+    password: string;
     role: string;
-  } = { firstName: '', lastName: '', email: '', role: '' };
+  } = { firstName: '', lastName: '', email: '', password: '', role: '' };
   updateUser: {
     role: string;
     selectedCourses: any;
@@ -177,6 +178,8 @@ export class UserListingComponent implements OnInit {
       error = 'Enter user email.';
     } else if (!this.addUser.role) {
       error = 'Select role.';
+    } else if (!this.addUser.password) {
+      error = 'Enter Password.';
     } else if (this.selectedRole == 'Teacher' && !this.selectedClassCourses) {
       error = 'Select Subjects.';
     }
@@ -195,6 +198,7 @@ export class UserListingComponent implements OnInit {
         lastName: this.addUser.lastName,
         email: this.addUser.email,
         role: this.addUser.role,
+        password: this.addUser.password,
         courses: selectedClassCoursesId,
       };
       this.userService.addUser(payload).subscribe((res) => {
@@ -277,7 +281,13 @@ export class UserListingComponent implements OnInit {
   }
 
   resetAddUser() {
-    this.addUser = { firstName: '', lastName: '', email: '', role: '' };
+    this.addUser = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      role: '',
+    };
   }
 
   resetSelectedUser() {
