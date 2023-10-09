@@ -59,6 +59,7 @@ export class AddQuestionComponent implements OnInit {
   questionFile: any = null;
   questionFileName: string = '';
   options: string = '';
+  optionsLink: string = 'optionsLink';
   optionsArray: {
     title: string;
     correct: boolean;
@@ -105,8 +106,10 @@ export class AddQuestionComponent implements OnInit {
   hintStatement: string = '';
   hintFile: any = null;
   hintFileName: string = '';
+  hintLink: string = 'Hints';
   solutionFile: any = null;
   solutionFileName: string = '';
+  soluctionLink: any = 'Soluction';
   points: any = 0;
   recommendedPoints: number = 0;
   time: any = 30;
@@ -115,6 +118,7 @@ export class AddQuestionComponent implements OnInit {
   tagDropdownSettings: IDropdownSettings = {};
   secondsArray = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300];
   statementImageFile: any = null;
+  statementLink: string = 'Statement';
   hintImageFile: any = null;
   solutionImageFile: any = null;
   currentOptions: any;
@@ -398,8 +402,8 @@ export class AddQuestionComponent implements OnInit {
     this.filesArray = [];
     if (this.questionFile) {
       this.statementImageFile = this.getFileLink(
-        'Questions',
-        this.questionFile
+        'Questions'
+        // this.questionFile
       );
 
       this.filesArray.push({
@@ -409,7 +413,7 @@ export class AddQuestionComponent implements OnInit {
       });
     }
     if (this.hintFile) {
-      this.hintImageFile = this.getFileLink('Hints', this.hintFile);
+      // this.hintImageFile = this.getFileLink('Hints', this.hintFile);
 
       this.filesArray.push({
         file: this.hintFile,
@@ -418,7 +422,7 @@ export class AddQuestionComponent implements OnInit {
       });
     }
     if (this.solutionFile) {
-      this.solutionImageFile = this.getFileLink('Solutions', this.solutionFile);
+      // this.solutionImageFile = this.getFileLink('Solutions', this.solutionFile);
 
       this.filesArray.push({
         file: this.solutionFile,
@@ -508,7 +512,18 @@ export class AddQuestionComponent implements OnInit {
     this.selectedTags.forEach((id) => tagid.push(id.id));
     // console.log(tagid);
     // console.log(optionsToSend);
+    this.hintLink = this.getFileLink(this.hintLink);
+    this.soluctionLink = this.getFileLink(this.soluctionLink);
+    this.statementLink = this.getFileLink(this.statementLink);
+    this.optionsLink = this.getFileLink(this.optionsLink);
+
+    console.log(this.hintLink, this.soluctionLink, this.statementLink);
+
     var payload = new FormData();
+    payload.append('optionsLink', this.optionsLink);
+    payload.append('hintLink', this.hintLink);
+    payload.append('soluctionLink', this.soluctionLink);
+    payload.append('statementLink', this.statementLink);
     payload.append('courseId', this.courseId);
     payload.append('typeId', this.typeId);
     payload.append('difficultyId', this.difficultyId);
@@ -604,15 +619,9 @@ export class AddQuestionComponent implements OnInit {
     }
   }
 
-  getFileLink(folderName: string, file: File): string {
-    return (
-      this.uploadFolder +
-      folderName +
-      '/' +
-      Date.now().toString() +
-      '_' +
-      file.name
-    );
+  getFileLink(folderName: string): string {
+    console.log(folderName);
+    return this.uploadFolder + folderName + '/';
   }
 
   setPoints() {

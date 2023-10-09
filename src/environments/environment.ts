@@ -10,7 +10,7 @@ export const environment = {
   uploadFileSize: 5000000,
   dropBoxToken:
     '4dLVexvzQZMAAAAAAAAAAb6AR3E0ttNIGn2xwztblEROwtviNgK2k8S-ZXzc7gsx',
-  dropBoxFolder: '/Apps/Assessment Tool/',
+  dropBoxFolder: 'apps/assessmentTool/',
   fileSource: 'dropbox',
 };
 
