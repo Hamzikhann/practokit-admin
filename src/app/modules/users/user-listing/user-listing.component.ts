@@ -198,7 +198,7 @@ export class UserListingComponent implements OnInit {
         lastName: this.addUser.lastName,
         email: this.addUser.email,
         role: this.addUser.role,
-        password: this.addUser.password,
+        // password: this.addUser.password,
         courses: selectedClassCoursesId,
       };
       this.userService.addUser(payload).subscribe((res) => {
