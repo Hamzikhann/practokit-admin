@@ -11,6 +11,7 @@ import { AttemptComponent } from './attempt/attempt.component';
 import { DataTablesModule } from 'angular-datatables';
 import { ListingComponent } from './listing/listing.component';
 import { DetailComponent } from './detail/detail.component';
+import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 
 const routes: Routes = [
   {
@@ -57,6 +58,7 @@ const routes: Routes = [
     FormsModule,
     DataTablesModule,
     NgxPaginationModule,
+    AutocompleteLibModule,
     RouterModule.forChild(routes),
   ],
 })

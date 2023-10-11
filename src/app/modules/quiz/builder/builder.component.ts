@@ -402,17 +402,21 @@ export class BuilderComponent implements OnInit {
   }
 
   filter() {
-    if (
-      this.selectedDifficulties.length == 0 &&
-      this.selectedTags.length == 0
-    ) {
+    let diffculityid: any = [];
+    let tagid: any = [];
+    this.selectedDifficulty.forEach((i: any) => {
+      diffculityid.push(i.value);
+    });
+    this.selectedTags.forEach((i: any) => {
+      tagid.push(i.value);
+    });
+    // console.log(diffculityid);
+
+    if (diffculityid.length == 0 && tagid.length == 0) {
       this.filteredQuestions = this.questions.map((e: any) => {
         return e;
       });
-    } else if (
-      this.selectedDifficulties.length == 0 &&
-      this.selectedTags.length != 0
-    ) {
+    } else if (diffculityid.length == 0 && tagid.length != 0) {
       var newfilterQuestion: any[] = [];
       this.questions.forEach((q: { questionTags: any[]; id: any }) => {
         q.questionTags.forEach((t: { tag: { id: string } }) => {
@@ -424,7 +428,7 @@ export class BuilderComponent implements OnInit {
               .indexOf(q.id) == -1
           ) {
             if (
-              this.selectedTags.indexOf(t.tag.id) != -1 ||
+              tagid.indexOf(t.tag.id) != -1 ||
               this.selectedQuestionsIds.indexOf(q.id) != -1
             ) {
               newfilterQuestion.push(q);
@@ -433,10 +437,11 @@ export class BuilderComponent implements OnInit {
         });
       });
       this.filteredQuestions = newfilterQuestion;
-    } else if (
-      this.selectedDifficulties.length != 0 &&
-      this.selectedTags.length == 0
-    ) {
+    } else if (diffculityid.length != 0 && tagid.length == 0) {
+      // console.log(
+      //   'when the diffculity length is not 0 ',
+      //   this.selectedDifficulty
+      // );
       var newfilterQuestion = [];
       this.questions.forEach(
         (q: { id: any; questionDifficulty: { id: any } }) => {
@@ -448,8 +453,7 @@ export class BuilderComponent implements OnInit {
               .indexOf(q.id) == -1
           ) {
             if (
-              this.selectedDifficulties.indexOf(q.questionDifficulty.id) !=
-                -1 ||
+              diffculityid.indexOf(q.questionDifficulty.id) != -1 ||
               this.selectedQuestionsIds.indexOf(q.id) != -1
             ) {
               newfilterQuestion.push(q);
@@ -457,6 +461,7 @@ export class BuilderComponent implements OnInit {
           }
         }
       );
+      console.log(newfilterQuestion);
       this.filteredQuestions = newfilterQuestion;
     } else {
       var newfilterQuestion = [];
@@ -476,11 +481,8 @@ export class BuilderComponent implements OnInit {
             ) {
               if (this.selectedQuestionsIds.indexOf(q.id) != -1) {
                 newfilterQuestion.push(q);
-              } else if (this.selectedTags.indexOf(t.tag.id) != -1) {
-                if (
-                  this.selectedDifficulties.indexOf(q.questionDifficulty.id) !=
-                  -1
-                ) {
+              } else if (tagid.indexOf(t.tag.id) != -1) {
+                if (diffculityid.indexOf(q.questionDifficulty.id) != -1) {
                   newfilterQuestion.push(q);
                 }
               }
@@ -765,8 +767,9 @@ export class BuilderComponent implements OnInit {
     // console.log(name);
     this.selectedTags.push(name);
     this.filterTags = this.filterTags.filter(
-      (course) => course.label.trim() !== name.trim()
+      (course) => course.label.trim() !== name.label.trim()
     );
+    this.filter();
   }
 
   removeCourse(index: number, cour: any, event: any) {
@@ -780,6 +783,7 @@ export class BuilderComponent implements OnInit {
     if (this.selectedTags.length == 0) {
       this.filterTags = this.tagList;
     }
+    this.filter();
   }
   onInputChange() {
     this.dropdownOpen = true;
@@ -825,8 +829,9 @@ export class BuilderComponent implements OnInit {
     // console.log(name);
     this.selectedDifficulty.push(name);
     this.filterDifficulty = this.filterDifficulty.filter(
-      (course) => course.label.trim() !== name.trim()
+      (course) => course.label.trim() !== name.label.trim()
     );
+    this.filter();
   }
 
   removeDifficulty(index: number, cour: any, event: any) {
@@ -840,6 +845,7 @@ export class BuilderComponent implements OnInit {
     if (this.selectedDifficulty.length == 0) {
       this.filterDifficulty = this.difficultyList;
     }
+    this.filter();
   }
   onInputDifficulty() {
     this.dropdownOpenOfDifficulty = true;

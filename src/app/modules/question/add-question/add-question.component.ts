@@ -682,6 +682,7 @@ export class AddQuestionComponent implements OnInit {
         link: '',
       },
     ];
+    this.solutionFile = null;
   }
 
   resetAddTag() {

@@ -93,10 +93,12 @@ export class DashboardComponent implements OnInit {
       }
 
       this.totalCourses = res.body['count'].courses;
+      // console.log(this.totalCourses);
       this.totalTags = res.body['count'].tags;
       this.totalUsers = res.body['count'].users;
 
       this.allQuestionStats = res.body['count']['questions'];
+      // console.log(this.allQuestionStats);
       this.setQuestionStats(this.allQuestionStats);
 
       this.allQuizStats = res.body['count']['quizzes'];
