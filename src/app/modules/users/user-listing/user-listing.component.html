@@ -258,7 +258,7 @@
                             <div *ngIf="dropdownOpen" class="dropdown group-control-dropdown"
                                 [ngClass]="{ 'show': dropdownOpen }">
                                 <ul class="filtered-courses dropdown-menu">
-                                    <ng-container *ngFor="let filter of filterClassCourses; let i = index">
+                                    <ng-container *ngFor="let filter of updatedFilterCourses; let i = index">
                                         <li class="p-2" (click)="addCourse(filter.title,filter.courseId,$event)">
                                             {{ filter.title }}
                                         </li>

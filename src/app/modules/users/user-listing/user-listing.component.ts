@@ -15,6 +15,7 @@ export class UserListingComponent implements OnInit {
   filterClassCourses: any[] = [];
   dropdownOpen = false;
   searchQueryOfClassCourses: string = '';
+  updatedFilterCourses: any[] = [];
 
   //////////////////////////////
 
@@ -381,40 +382,82 @@ export class UserListingComponent implements OnInit {
 
   removeCourse(index: number, cour: any, event: any) {
     event.stopPropagation();
+    if (
+      this.selectedUser.role == 'Teacher' &&
+      this.updateUser.role != 'Teacher'
+    ) {
+      this.selectedClassCourses.splice(index, 1);
+      // console.log(this.selectedTags);
 
-    this.selectedClassCourses.splice(index, 1);
-    // console.log(this.selectedTags);
+      this.filterClassCourses.push(cour);
+      // console.log(this.filterClassCourses);
 
-    this.filterClassCourses.push(cour);
-    // console.log(this.filterClassCourses);
+      if (this.filterClassCourses.length == 0) {
+        this.filterClassCourses = this.classCoursesList;
+      }
+    } else {
+      this.updateUser.selectedCourses.splice(index, 1);
+      // console.log(this.selectedTags);
 
-    if (this.filterClassCourses.length == 0) {
-      this.filterClassCourses = this.classCoursesList;
+      this.updatedFilterCourses.push(cour);
+      // console.log(this.filterClassCourses);
+
+      if (this.updatedFilterCourses.length == 0) {
+        this.updatedFilterCourses = this.classCoursesList;
+      }
     }
   }
   onInputChange() {
     this.dropdownOpen = true;
     let courses: any[] = [];
-    this.selectedClassCourses.forEach((e) => {
-      courses.push(e.title);
-    });
 
-    if (this.searchQueryOfClassCourses !== '') {
-      this.filterClassCourses = this.classCoursesList.filter(
-        (course: { title: string }) => !courses.includes(course.title)
-      );
-      // console.log(this.selectedClassCourses, this.filterClassCourses);
+    if (
+      this.selectedUser.role == 'Teacher' &&
+      this.updateUser.role != 'Teacher'
+    ) {
+      this.selectedClassCourses.forEach((e) => {
+        courses.push(e.title);
+      });
 
-      this.filterClassCourses = this.filterClassCourses.filter(
-        (course: { title: string }) =>
-          course.title
-            .toLowerCase()
-            .includes(this.searchQueryOfClassCourses.toLowerCase())
-      );
+      if (this.searchQueryOfClassCourses !== '') {
+        this.filterClassCourses = this.classCoursesList.filter(
+          (course: { title: string }) => !courses.includes(course.title)
+        );
+        // console.log(this.selectedClassCourses, this.filterClassCourses);
+
+        this.filterClassCourses = this.filterClassCourses.filter(
+          (course: { title: string }) =>
+            course.title
+              .toLowerCase()
+              .includes(this.searchQueryOfClassCourses.toLowerCase())
+        );
+      } else {
+        this.filterClassCourses = this.classCoursesList.filter(
+          (course: { title: any }) => !courses.includes(course.title)
+        );
+      }
     } else {
-      this.filterClassCourses = this.classCoursesList.filter(
-        (course: { title: any }) => !courses.includes(course.title)
-      );
+      this.updateUser.selectedCourses.forEach((e: any) => {
+        courses.push(e.title);
+      });
+
+      if (this.searchQueryOfClassCourses !== '') {
+        this.updatedFilterCourses = this.classCoursesList.filter(
+          (course: { title: string }) => !courses.includes(course.title)
+        );
+        // console.log(this.selectedClassCourses, this.filterClassCourses);
+
+        this.updatedFilterCourses = this.updatedFilterCourses.filter(
+          (course: { title: string }) =>
+            course.title
+              .toLowerCase()
+              .includes(this.searchQueryOfClassCourses.toLowerCase())
+        );
+      } else {
+        this.updatedFilterCourses = this.classCoursesList.filter(
+          (course: { title: any }) => !courses.includes(course.title)
+        );
+      }
     }
   }
   toggleDropdown() {
