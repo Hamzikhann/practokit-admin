@@ -199,7 +199,8 @@ export class AddQuestionComponent implements OnInit {
         this.correctOption = question.questionsOptions[0].correct ? '0' : '1';
       }
       question.questionTags.map((tag: { tag: { id: any } }) => {
-        this.selectedTags.push(tag.tag.id);
+        console.log(tag);
+        this.selectedTags.push(tag.tag);
       });
     });
   }

@@ -244,11 +244,11 @@
                             <div class="group-control" (clickOutside)="onClickedOutside($event)">
                                 <div class="selected">
 
-                                    <span *ngFor="let course of selectedClassCourses; let i = index"
+                                    <span *ngFor="let course of updateUser.selectedCourses; let i = index"
                                         class="selected-course">
                                         {{course.title}}
                                         <span class="remove-icon"
-                                            (click)="removeCourse(i,selectedClassCourses[i],$event)">x</span>
+                                            (click)="removeCourse(i,updateUser.selectedCourses[i],$event)">x</span>
                                     </span>
                                 </div>
                                 <input class="form-control border-0 shadow-none" type="text" (input)="onInputChange()"

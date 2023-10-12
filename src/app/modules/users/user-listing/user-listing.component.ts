@@ -106,6 +106,7 @@ export class UserListingComponent implements OnInit {
   getUsers() {
     this.userService.getUsers().subscribe((res) => {
       this.usersList = res.body;
+      console.log(this.usersList);
       this.usersList.forEach((element: { id: any }, index: any) => {
         if (element.id == this.currentUser.id) {
           this.usersList.splice(index, 1);
@@ -148,13 +149,18 @@ export class UserListingComponent implements OnInit {
     lastName: any;
     email: any;
   }) {
+    console.log(user);
     var courses: any[] = [];
     if (user.role.title == 'Teacher') {
-      user.teaches.forEach((course: { courseId: any }) => {
-        courses.push(course.courseId);
+      user.teaches.forEach((course: any) => {
+        let newObject = {
+          courseId: course.courseId,
+          title: course.course.title,
+        };
+        courses.push(newObject);
       });
     }
-
+    console.log(courses);
     this.selectedUser = {
       id: user.id,
       firstName: user.firstName,
@@ -226,7 +232,7 @@ export class UserListingComponent implements OnInit {
   UpdateUser() {
     let selectedCourseids: any[] = [];
     // console.log(this.selectedClassCourses);
-    this.selectedClassCourses.forEach((e) =>
+    this.updateUser.selectedCourses.forEach((e: any) =>
       selectedCourseids.push(e.courseId)
     );
 
@@ -240,6 +246,7 @@ export class UserListingComponent implements OnInit {
       ].id,
       courses: selectedCourseids,
     };
+    console.log(payload);
 
     this.userService
       .updateUserRole(this.selectedUser.id, payload)
@@ -342,16 +349,33 @@ export class UserListingComponent implements OnInit {
 
   addCourse(name: any, id: any, event: any) {
     event.stopPropagation();
-
+    if (
+      this.selectedUser.role == 'Teacher' &&
+      this.updateUser.role != 'Teacher'
+    ) {
+      let tags: any = {
+        title: name,
+        courseId: id,
+      };
+      this.selectedClassCourses.push(tags);
+      // console.log(this.selectedClassCourses);
+      this.filterClassCourses = this.filterClassCourses.filter(
+        (course) => course.title.trim() !== name.trim()
+      );
+    } else {
+      let tags: any = {
+        title: name,
+        courseId: id,
+      };
+      this.updateUser.selectedCourses.push(tags);
+      // console.log(this.updateUser.selectedCourses);
+      this.filterClassCourses = this.filterClassCourses.filter(
+        (course) => course.title.trim() !== name.trim()
+      );
+    }
     // console.log(name, id);
-    let tags: any = {
-      title: name,
-      courseId: id,
-    };
-    this.selectedClassCourses.push(tags);
-    // console.log(this.selectedClassCourses);
-    this.filterClassCourses = this.filterClassCourses.filter(
-      (course) => course.title.trim() !== name.trim()
+    console.log(
+      this.selectedUser.role == 'Teacher' && this.updateUser.role != 'Teacher'
     );
   }
 
