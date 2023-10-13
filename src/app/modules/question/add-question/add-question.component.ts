@@ -199,7 +199,7 @@ export class AddQuestionComponent implements OnInit {
         this.correctOption = question.questionsOptions[0].correct ? '0' : '1';
       }
       question.questionTags.map((tag: { tag: { id: any } }) => {
-        console.log(tag);
+        // console.log(tag);
         this.selectedTags.push(tag.tag);
       });
     });
@@ -269,7 +269,16 @@ export class AddQuestionComponent implements OnInit {
           this.tagList[index].value = element.id;
         }
       );
-      // console.log(this.filterTags);
+      const selectedTagIds = new Set(
+        this.selectedTags.map((course: any) => course.id)
+      );
+
+      const allTagIds = new Set(this.filterTags.map((course) => course.id));
+
+      const uncommonTags = this.filterTags.filter(
+        (course) => !selectedTagIds.has(course.id)
+      );
+      this.filterTags = uncommonTags;
     });
   }
 
@@ -518,8 +527,6 @@ export class AddQuestionComponent implements OnInit {
     this.statementLink = this.getFileLink(this.statementLink);
     this.optionsLink = this.getFileLink(this.optionsLink);
 
-    console.log(this.hintLink, this.soluctionLink, this.statementLink);
-
     var payload = new FormData();
     payload.append('optionsLink', this.optionsLink);
     payload.append('hintLink', this.hintLink);
@@ -621,7 +628,6 @@ export class AddQuestionComponent implements OnInit {
   }
 
   getFileLink(folderName: string): string {
-    console.log(folderName);
     return this.uploadFolder + folderName + '/';
   }
 

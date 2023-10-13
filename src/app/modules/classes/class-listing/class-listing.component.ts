@@ -26,7 +26,6 @@ export class ClassListingComponent implements OnInit {
   ngOnInit(): void {
     let user: any = localStorage.getItem('user');
     this.currentUser = JSON.parse(user);
-    // console.log(this.currentUser);
     this.getGradeListing();
   }
 

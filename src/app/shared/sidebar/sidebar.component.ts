@@ -17,8 +17,6 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.authService.getUser().subscribe((res: any) => {
-      // console.log(res);
-      // let user = JSON.parse(res);
       this.currentUser = res;
       this.loading = false;
     });

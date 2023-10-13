@@ -107,7 +107,6 @@ export class UserListingComponent implements OnInit {
   getUsers() {
     this.userService.getUsers().subscribe((res) => {
       this.usersList = res.body;
-      console.log(this.usersList);
       this.usersList.forEach((element: { id: any }, index: any) => {
         if (element.id == this.currentUser.id) {
           this.usersList.splice(index, 1);
@@ -137,8 +136,7 @@ export class UserListingComponent implements OnInit {
         }
       );
       this.filterClassCourses = this.classCoursesList;
-
-      // console.log(this.filterClassCourses);
+      this.updatedFilterCourses = this.classCoursesList;
     });
   }
 
@@ -150,7 +148,6 @@ export class UserListingComponent implements OnInit {
     lastName: any;
     email: any;
   }) {
-    console.log(user);
     var courses: any[] = [];
     if (user.role.title == 'Teacher') {
       user.teaches.forEach((course: any) => {
@@ -161,7 +158,6 @@ export class UserListingComponent implements OnInit {
         courses.push(newObject);
       });
     }
-    console.log(courses);
     this.selectedUser = {
       id: user.id,
       firstName: user.firstName,
@@ -172,6 +168,20 @@ export class UserListingComponent implements OnInit {
     };
     this.updateUser.role = this.selectedUser.role;
     this.updateUser.selectedCourses = this.selectedUser.selectedCourses;
+
+    const selectedCourseIds = new Set(
+      this.updateUser.selectedCourses.map((course: any) => course.courseId)
+    );
+
+    const allCourseIds = new Set(
+      this.updatedFilterCourses.map((course) => course.value)
+    );
+
+    const uncommonAllCourses = this.updatedFilterCourses.filter(
+      (course) => !selectedCourseIds.has(course.courseId)
+    );
+
+    this.updatedFilterCourses = uncommonAllCourses;
   }
 
   AddUser() {
@@ -198,14 +208,12 @@ export class UserListingComponent implements OnInit {
       this.selectedClassCourses.forEach((id: any) => {
         selectedClassCoursesId.push(id.courseId);
       });
-      // console.log(selectedClassCoursesId);
 
       var payload = {
         firstName: this.addUser.firstName,
         lastName: this.addUser.lastName,
         email: this.addUser.email,
         role: this.addUser.role,
-        // password: this.addUser.password,
         courses: selectedClassCoursesId,
       };
       this.userService.addUser(payload).subscribe((res) => {
@@ -232,7 +240,6 @@ export class UserListingComponent implements OnInit {
 
   UpdateUser() {
     let selectedCourseids: any[] = [];
-    // console.log(this.selectedClassCourses);
     this.updateUser.selectedCourses.forEach((e: any) =>
       selectedCourseids.push(e.courseId)
     );
@@ -247,8 +254,6 @@ export class UserListingComponent implements OnInit {
       ].id,
       courses: selectedCourseids,
     };
-    console.log(payload);
-
     this.userService
       .updateUserRole(this.selectedUser.id, payload)
       .subscribe((res) => {
@@ -350,16 +355,12 @@ export class UserListingComponent implements OnInit {
 
   addCourse(name: any, id: any, event: any) {
     event.stopPropagation();
-    if (
-      this.selectedUser.role == 'Teacher' &&
-      this.updateUser.role != 'Teacher'
-    ) {
+    if (this.updateUser.role != 'Teacher') {
       let tags: any = {
         title: name,
         courseId: id,
       };
       this.selectedClassCourses.push(tags);
-      // console.log(this.selectedClassCourses);
       this.filterClassCourses = this.filterClassCourses.filter(
         (course) => course.title.trim() !== name.trim()
       );
@@ -369,39 +370,25 @@ export class UserListingComponent implements OnInit {
         courseId: id,
       };
       this.updateUser.selectedCourses.push(tags);
-      // console.log(this.updateUser.selectedCourses);
-      this.filterClassCourses = this.filterClassCourses.filter(
+      this.updatedFilterCourses = this.updatedFilterCourses.filter(
         (course) => course.title.trim() !== name.trim()
       );
     }
-    // console.log(name, id);
-    console.log(
-      this.selectedUser.role == 'Teacher' && this.updateUser.role != 'Teacher'
-    );
   }
 
   removeCourse(index: number, cour: any, event: any) {
     event.stopPropagation();
-    if (
-      this.selectedUser.role == 'Teacher' &&
-      this.updateUser.role != 'Teacher'
-    ) {
+    if (this.updateUser.role != 'Teacher') {
       this.selectedClassCourses.splice(index, 1);
-      // console.log(this.selectedTags);
 
       this.filterClassCourses.push(cour);
-      // console.log(this.filterClassCourses);
 
       if (this.filterClassCourses.length == 0) {
         this.filterClassCourses = this.classCoursesList;
       }
     } else {
       this.updateUser.selectedCourses.splice(index, 1);
-      // console.log(this.selectedTags);
-
       this.updatedFilterCourses.push(cour);
-      // console.log(this.filterClassCourses);
-
       if (this.updatedFilterCourses.length == 0) {
         this.updatedFilterCourses = this.classCoursesList;
       }
@@ -411,10 +398,7 @@ export class UserListingComponent implements OnInit {
     this.dropdownOpen = true;
     let courses: any[] = [];
 
-    if (
-      this.selectedUser.role == 'Teacher' &&
-      this.updateUser.role != 'Teacher'
-    ) {
+    if (this.updateUser.role != 'Teacher') {
       this.selectedClassCourses.forEach((e) => {
         courses.push(e.title);
       });
@@ -423,7 +407,6 @@ export class UserListingComponent implements OnInit {
         this.filterClassCourses = this.classCoursesList.filter(
           (course: { title: string }) => !courses.includes(course.title)
         );
-        // console.log(this.selectedClassCourses, this.filterClassCourses);
 
         this.filterClassCourses = this.filterClassCourses.filter(
           (course: { title: string }) =>
@@ -445,7 +428,6 @@ export class UserListingComponent implements OnInit {
         this.updatedFilterCourses = this.classCoursesList.filter(
           (course: { title: string }) => !courses.includes(course.title)
         );
-        // console.log(this.selectedClassCourses, this.filterClassCourses);
 
         this.updatedFilterCourses = this.updatedFilterCourses.filter(
           (course: { title: string }) =>

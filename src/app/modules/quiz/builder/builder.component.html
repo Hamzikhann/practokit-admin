@@ -167,7 +167,7 @@
                                                     <div class="selected">
                                                         <span *ngFor="let course of selectedTags; let i = index"
                                                             class="selected-course">
-                                                            {{course.label}}
+                                                            {{course.title}}
                                                             <span class="remove-icon"
                                                                 (click)="removeCourse(i,selectedTags[i],$event)">x</span>
                                                         </span>
@@ -181,7 +181,7 @@
                                                     <ul class="filtered-courses dropdown-menu">
                                                         <ng-container *ngFor="let filter of filterTags; let i = index">
                                                             <li class="p-2" (click)="addCourse(filter,$event)">
-                                                                {{ filter.label }}
+                                                                {{ filter.title }}
                                                             </li>
                                                         </ng-container>
                                                     </ul>

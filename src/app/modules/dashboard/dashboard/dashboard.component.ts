@@ -60,8 +60,6 @@ export class DashboardComponent implements OnInit {
   @ViewChild('screen', { static: true }) screen: any;
   saveImage(img: string) {
     this.img = img;
-
-    // console.log(this.img);
   }
 
   ngOnInit(): void {
@@ -72,13 +70,11 @@ export class DashboardComponent implements OnInit {
     let user: any = localStorage.getItem('user');
 
     this.currentUser = JSON.parse(user);
-    // console.log(this.currentUser);
     this.getDashboard();
   }
 
   getDashboard() {
     this.dashboardService.getDashboard().subscribe((res: any) => {
-      // console.log(res.body['editorsAndTeachers']);
       if (res.body['editorsAndTeachers']) {
         res.body['editorsAndTeachers'].forEach(
           (user: { role: { title: string } }) => {
@@ -89,16 +85,13 @@ export class DashboardComponent implements OnInit {
             }
           }
         );
-        // console.log(this.teachersList);
       }
 
       this.totalCourses = res.body['count'].courses;
-      // console.log(this.totalCourses);
       this.totalTags = res.body['count'].tags;
       this.totalUsers = res.body['count'].users;
 
       this.allQuestionStats = res.body['count']['questions'];
-      // console.log(this.allQuestionStats);
       this.setQuestionStats(this.allQuestionStats);
 
       this.allQuizStats = res.body['count']['quizzes'];
@@ -177,7 +170,6 @@ export class DashboardComponent implements OnInit {
   //   });
   //   // get the data as base64 or json object for json type - this will be helpful in ionic or SSR
   //   // this.exportAsService.get(this.exportAsConfig).subscribe(content => {
-  //   //   console.log(content);
   //   // });
   // }
 
@@ -191,13 +183,11 @@ export class DashboardComponent implements OnInit {
   //     .subscribe((img) => {
   //       this.imgBase64 = img;
 
-  //       console.log(this.imgBase64)
   //       const file = this.DataURIToBlob(this.imgBase64);
 
   //       const safeUrl = this.sanitizer.bypassSecurityTrustUrl(
   //         window.URL.createObjectURL(file)
   //       );
-  // console.log(safeUrl);
   //     });
   // }
 

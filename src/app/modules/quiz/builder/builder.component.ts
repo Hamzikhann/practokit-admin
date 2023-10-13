@@ -138,10 +138,8 @@ export class BuilderComponent implements OnInit {
 
   ngOnInit(): void {
     this.quizId = this.activatedRoute.snapshot.paramMap.get('quizId');
-    // console.log(this.quizId);
     this.getClasses();
-    // this.getDifficulties();
-    // this.getTags();
+
     if (this.quizId) {
       this.loading = true;
       this.editMode = true;
@@ -151,19 +149,19 @@ export class BuilderComponent implements OnInit {
 
   getQuizDetail() {
     this.quizService.getQuizDetail(this.quizId).subscribe((res: any) => {
-      // console.log(res);
       this.getCourses(res.body['classId']);
       this.title = res.body['title'];
       this.gradeId = res.body['classId'];
       this.courseId = res.body['courseId'];
       this.gradeTitle = res.body['classTitle'];
       this.courseTitle = res.body['courseTitle'];
-      this.getTags();
+      // this.getTags();
       this.getAllCourseQuestions();
 
       res.body['tags'].forEach((element: { id: string }) => {
-        this.selectedTags.push(element.id);
+        this.selectedTags.push(element);
       });
+
       res.body['questionsPool'].forEach((element: { id: any }) => {
         this.selectedQuestions.push(element);
         this.selectedQuestionsIds.push(element.id);
@@ -185,7 +183,6 @@ export class BuilderComponent implements OnInit {
 
   getClasses() {
     this.gradeService.getAllGrades().subscribe((res: any) => {
-      // console.log(res);
       this.gradeList = res.body;
     });
   }
@@ -206,9 +203,7 @@ export class BuilderComponent implements OnInit {
           value: diff.id,
         });
       });
-      // console.log(this.difficultyList);
       this.filterDifficulty = this.difficultyList;
-      // console.log(this.filterDifficulty);
     });
   }
 
@@ -216,13 +211,22 @@ export class BuilderComponent implements OnInit {
     this.tagService.getTagsByCourseId(this.courseId).subscribe((res: any) => {
       res.body.forEach((tag: { title: any; id: any }) => {
         this.tagList.push({
-          label: tag.title,
+          title: tag.title,
           value: tag.id,
         });
       });
-      // console.log(this.tagList);
       this.filterTags = this.tagList;
-      // console.log(this.filterTags);
+      if (this.selectedTags) {
+        const selectedTagsds = new Set(
+          this.selectedTags.map((tags: any) => tags.id)
+        );
+
+        const alltags = new Set(this.filterTags.map((tags) => tags.value));
+        const uncommonAllTags = this.filterTags.filter(
+          (tags) => !selectedTagsds.has(tags.value)
+        );
+        this.filterTags = uncommonAllTags;
+      }
     });
   }
 
@@ -408,9 +412,8 @@ export class BuilderComponent implements OnInit {
       diffculityid.push(i.value);
     });
     this.selectedTags.forEach((i: any) => {
-      tagid.push(i.value);
+      tagid.push(i.id);
     });
-    // console.log(diffculityid);
 
     if (diffculityid.length == 0 && tagid.length == 0) {
       this.filteredQuestions = this.questions.map((e: any) => {
@@ -438,10 +441,6 @@ export class BuilderComponent implements OnInit {
       });
       this.filteredQuestions = newfilterQuestion;
     } else if (diffculityid.length != 0 && tagid.length == 0) {
-      // console.log(
-      //   'when the diffculity length is not 0 ',
-      //   this.selectedDifficulty
-      // );
       var newfilterQuestion = [];
       this.questions.forEach(
         (q: { id: any; questionDifficulty: { id: any } }) => {
@@ -461,7 +460,6 @@ export class BuilderComponent implements OnInit {
           }
         }
       );
-      console.log(newfilterQuestion);
       this.filteredQuestions = newfilterQuestion;
     } else {
       var newfilterQuestion = [];
@@ -764,21 +762,26 @@ export class BuilderComponent implements OnInit {
   //////////////////////////
   addCourse(name: any, event: any) {
     event.stopPropagation();
-    // console.log(name);
-    this.selectedTags.push(name);
+    let newTag = {
+      title: name.title,
+      id: name.value,
+    };
+    this.selectedTags.push(newTag);
     this.filterTags = this.filterTags.filter(
-      (course) => course.label.trim() !== name.label.trim()
+      (course) => course.title.trim() !== name.title.trim()
     );
     this.filter();
   }
 
   removeCourse(index: number, cour: any, event: any) {
     event.stopPropagation();
+
     this.selectedTags.splice(index, 1);
-    let newcour = {
-      label: cour,
+    let newTag = {
+      title: cour.title,
+      id: cour.value,
     };
-    this.filterTags.push(newcour);
+    this.filterTags.push(newTag);
 
     if (this.selectedTags.length == 0) {
       this.filterTags = this.tagList;
@@ -791,21 +794,19 @@ export class BuilderComponent implements OnInit {
     // this.selectedTags.forEach((e) => {
     //   taags.push(e.label);
     // });
-    // console.log(taags);
     if (this.searchQueryOfTags !== '') {
       this.filterTags = this.tagList.filter(
-        (course: { label: string }) => !this.selectedTags.includes(course.label)
+        (course: { title: string }) => !this.selectedTags.includes(course.title)
       );
-      // console.log(this.selectedTags, this.filterTags);
 
-      this.filterTags = this.filterTags.filter((course: { label: string }) =>
-        course.label
+      this.filterTags = this.filterTags.filter((course: { title: string }) =>
+        course.title
           .toLowerCase()
           .includes(this.searchQueryOfTags.toLowerCase())
       );
     } else {
       this.filterTags = this.tagList.filter(
-        (course: { label: any }) => !this.selectedTags.includes(course.label)
+        (course: { title: any }) => !this.selectedTags.includes(course.title)
       );
     }
   }
@@ -826,7 +827,6 @@ export class BuilderComponent implements OnInit {
   //////////////////////////
   addDifficulty(name: any, event: any) {
     event.stopPropagation();
-    // console.log(name);
     this.selectedDifficulty.push(name);
     this.filterDifficulty = this.filterDifficulty.filter(
       (course) => course.label.trim() !== name.label.trim()
@@ -849,19 +849,12 @@ export class BuilderComponent implements OnInit {
   }
   onInputDifficulty() {
     this.dropdownOpenOfDifficulty = true;
-    // let difficulty: any[] = [];
-
-    // this.selectedDifficulty.forEach((e) => {
-    //   difficulty.push(e.label);
-    // });
-    // console.log(difficulty, this.selectedDifficulty);
 
     if (this.searchQueryOfDifficulty !== '') {
       this.filterDifficulty = this.difficultyList.filter(
         (course: { label: string }) =>
           !this.selectedDifficulty.includes(course.label)
       );
-      // console.log(this.selectedDifficulty, this.filterTags);
 
       this.filterDifficulty = this.filterDifficulty.filter(
         (course: { label: string }) =>
@@ -877,7 +870,6 @@ export class BuilderComponent implements OnInit {
     }
   }
   toggleDropdownOfDifficulty() {
-    // console.log(this.filterDifficulty);
     this.dropdownOpen = false;
     this.dropdownOpenOfDifficulty = !this.dropdownOpenOfDifficulty;
   }

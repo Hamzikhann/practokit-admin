@@ -159,7 +159,6 @@ export class QuestionListingComponent implements OnInit {
         })
         .subscribe((res: any) => {
           const response = res.body;
-          // console.log(response);
           this.safeUrl = response.safeUrl;
         });
 
@@ -173,7 +172,6 @@ export class QuestionListingComponent implements OnInit {
       //     );
       //   })
       //   .catch((error) => {
-      //     console.log('got error:', error.status);
       //     this.safeUrl = '';
       //   });
     }
@@ -199,7 +197,6 @@ export class QuestionListingComponent implements OnInit {
       //   })
       //   .catch((error) => {
       //     this.optionsSafeUrl[0] = '';
-      //     console.log('0 got error:', error);
       //   });
     }
     if (options[1]?.image) {
@@ -221,7 +218,6 @@ export class QuestionListingComponent implements OnInit {
       //   })
       //   .catch((error) => {
       //     this.optionsSafeUrl[1] = '';
-      //     console.log('1 got error:', error);
       //   });
     }
     if (options[2]?.image) {
@@ -242,7 +238,6 @@ export class QuestionListingComponent implements OnInit {
       //   })
       //   .catch((error) => {
       //     this.optionsSafeUrl[2] = '';
-      //     console.log('2 got error:', error);
       //   });
     }
     if (options[3]?.image) {
@@ -263,7 +258,6 @@ export class QuestionListingComponent implements OnInit {
       //   })
       //   .catch((error) => {
       //     this.optionsSafeUrl[3] = '';
-      //     console.log('3 got error:', error);
       //   });
     }
     if (options[4]?.image) {
@@ -284,7 +278,6 @@ export class QuestionListingComponent implements OnInit {
       //   })
       //   .catch((error) => {
       //     this.optionsSafeUrl[4] = '';
-      //     console.log('4 got error:', error);
       //   });
     }
     if (options[5]?.image) {
@@ -305,7 +298,6 @@ export class QuestionListingComponent implements OnInit {
       //   })
       //   .catch((error) => {
       //     this.optionsSafeUrl[5] = '';
-      //     console.log('5 got error:', error);
       //   });
     }
     if (options[6]?.image) {
@@ -326,7 +318,6 @@ export class QuestionListingComponent implements OnInit {
       //   })
       //   .catch((error) => {
       //     this.optionsSafeUrl[6] = '';
-      //     console.log('6 got error:', error);
       //   });
     }
     if (options[7]?.image) {

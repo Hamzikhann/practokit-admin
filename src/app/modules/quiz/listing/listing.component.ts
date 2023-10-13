@@ -45,20 +45,12 @@ export class ListingComponent implements OnInit {
 
   getGrades() {
     this.gradeService.getAllGrades().subscribe((res) => {
-      // console.log(res.body);
       this.gradeList = res.body;
     });
   }
 
   getAssessments() {
-    // console.log(this.currentUser);
-
-    // const payload = {
-    //   role: this.currentUser.role.title,
-    //   userID: this.currentUser.createdBy,
-    // };
     this.quizService.getAllAssessments().subscribe((res: any) => {
-      // console.log(res.body);
       res.body.forEach(
         (assessment: {
           questionsPool: string;
@@ -111,7 +103,6 @@ export class ListingComponent implements OnInit {
 
   Filter() {
     this.filteredAssessmentList = this.assessmentList;
-    // console.log(this.filteredAssessmentList);
     if (this.gradeId) {
       this.filteredAssessmentList = [];
       this.assessmentList.forEach(

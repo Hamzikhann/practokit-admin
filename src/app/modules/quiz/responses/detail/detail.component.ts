@@ -33,7 +33,6 @@ export class DetailComponent implements OnInit {
     this.loading = true;
     this.quizId = this.activatedRoute.snapshot.paramMap.get('quizId');
     this.userId = this.activatedRoute.snapshot.paramMap.get('userId');
-    // console.log(this.quizId, this.userId);
     // var dbx = new Dropbox({ accessToken: environment.dropBoxToken });
 
     this.submissionService
@@ -44,11 +43,8 @@ export class DetailComponent implements OnInit {
           this.submission.quizSubmissionResponse.response
         );
 
-        // console.log(this.response);
         this.response.forEach(async (question: any) => {
-          // console.log(question);
           if (question?.questionsAttribute?.statementImage) {
-            // console.log(question?.questionsAttribute?.statementImage);
             this.helperService
               .getFileSafeUrl({
                 file: question?.questionsAttribute?.statementImage,

@@ -102,9 +102,7 @@ export class DetailComponent implements OnInit {
 
   getQuizDetail() {
     this.quizService.getQuizDetail(this.quizId).subscribe((res) => {
-      // console.log(res.body);
       this.quiz = res.body;
-      // console.log(this.quiz);
       this.questionsType = new Set();
       var totalTime = 0;
 
@@ -409,7 +407,6 @@ export class DetailComponent implements OnInit {
               label: user.firstName + ' ' + user.lastName,
               value: user.id,
             });
-            // console.log(this.studentsList);
             this.filterStudents = this.studentsList;
           }
         );
@@ -422,12 +419,9 @@ export class DetailComponent implements OnInit {
     if (!this.selectedStudents.length) {
       this.toastr.error('Select at least ONE Student!');
     } else {
-      // console.log(this.selectedStudents);
-
       this.selectedStudents.map((e) => {
         this.assignToList.push(e.value);
       });
-      // console.log(this.assignToList);
       var payload = {
         studentList: this.assignToList,
       };
@@ -480,7 +474,6 @@ export class DetailComponent implements OnInit {
   addCourse(name: any, value: any, event: any) {
     event.stopPropagation();
 
-    // console.log(name);
     let newstu = {
       label: name,
       value: value,
@@ -512,7 +505,6 @@ export class DetailComponent implements OnInit {
         (course: { label: string }) =>
           !this.selectedStudents.includes(course.label)
       );
-      // console.log(this.selectedTags, this.filterTags);
 
       this.filterStudents = this.filterStudents.filter(
         (course: { label: string }) =>
