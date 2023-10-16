@@ -162,7 +162,6 @@ export class AddQuestionComponent implements OnInit {
 
   setQuestionData() {
     this.questionService.getQuestionsById(this.questionId).subscribe((res) => {
-      // console.log(res.body);
       var question: any = res.body;
       this.points = question.points;
       this.gradeId = question.course.class.id;
@@ -176,6 +175,8 @@ export class AddQuestionComponent implements OnInit {
       this.hintStatement = question.questionsAttribute?.hint;
       this.hintFileName = question.questionsAttribute?.hintFileName;
       this.time = question.duration;
+      this.hintFile = question.questionsAttribute?.hintFile;
+      this.questionFile = question.questionsAttribute?.statementImage;
       if (this.typeTitle == 'MCQ') {
         this.optionsArray = [];
         question.questionsOptions.forEach(
@@ -185,12 +186,14 @@ export class AddQuestionComponent implements OnInit {
           ) => {
             this.optionsArray.push({
               correct: option.correct,
-              file: null,
+              file: option.image ? option.image : null,
               link: option.image,
               name: option.fileName,
               title: option.title,
             });
-            if (option.correct) this.correctOption = index.toString();
+            if (option.correct) {
+              this.correctOption = index.toString();
+            }
           }
         );
       } else if (this.typeTitle == 'Fill in the Blank') {
@@ -199,7 +202,6 @@ export class AddQuestionComponent implements OnInit {
         this.correctOption = question.questionsOptions[0].correct ? '0' : '1';
       }
       question.questionTags.map((tag: { tag: { id: any } }) => {
-        // console.log(tag);
         this.selectedTags.push(tag.tag);
       });
     });
@@ -260,7 +262,6 @@ export class AddQuestionComponent implements OnInit {
 
   getTags() {
     this.tagService.getTagsByCourseId(this.courseId).subscribe((res) => {
-      // console.log(res.body);
       this.tagList = res.body;
       this.filterTags = this.tagList;
       this.filterTags.forEach(
@@ -481,6 +482,14 @@ export class AddQuestionComponent implements OnInit {
     var optionsToSend: any[] = [];
 
     if (this.typeTitle == 'MCQ') {
+      this.optionsArray.forEach((o: any, index: any) => {
+        if (index == this.correctOption) {
+          o.correct = true;
+        } else {
+          o.correct = false;
+        }
+      });
+
       this.optionsArray[this.correctOption].correct = true;
       this.optionsArray.forEach((option) => {
         var op = {
@@ -520,8 +529,6 @@ export class AddQuestionComponent implements OnInit {
     }
     let tagid: any[] = [];
     this.selectedTags.forEach((id) => tagid.push(id.id));
-    // console.log(tagid);
-    // console.log(optionsToSend);
     this.hintLink = this.getFileLink(this.hintLink);
     this.soluctionLink = this.getFileLink(this.soluctionLink);
     this.statementLink = this.getFileLink(this.statementLink);
@@ -554,13 +561,18 @@ export class AddQuestionComponent implements OnInit {
       payload.append('solutionFile', this.solutionFile);
     }
 
-    payload.append('statementFileName', '');
-    payload.append('hintFileName', '');
-    payload.append('solutionFileName', '');
+    payload.append(
+      'statementFileName',
+      this.questionFileName ? this.questionFileName : ''
+    );
+    payload.append('hintFileName', this.hintFileName ? this.hintFileName : '');
+    payload.append(
+      'solutionFileName',
+      this.solutionFileName ? this.solutionFileName : ''
+    );
     payload.append('options', JSON.stringify(optionsToSend));
 
     optionsToSend.forEach((option: any, key: any) => {
-      // console.log(key);
       payload.append('options-' + key, option.image);
     });
 
@@ -698,13 +710,11 @@ export class AddQuestionComponent implements OnInit {
 
   addCourse(name: any, id: any, event: any) {
     event.stopPropagation();
-    // console.log(name, id);
     let tags: any = {
       title: name,
       id: id,
     };
     this.selectedTags.push(tags);
-    // console.log(this.selectedTags);
     this.filterTags = this.filterTags.filter(
       (course) => course.title.trim() !== name.trim()
     );
@@ -713,10 +723,8 @@ export class AddQuestionComponent implements OnInit {
   removeCourse(index: number, cour: any, event: any) {
     event.stopPropagation();
     this.selectedTags.splice(index, 1);
-    // console.log(this.selectedTags);
 
     this.filterTags.push(cour);
-    // console.log(this.filterTags);
 
     if (this.selectedTags.length == 0) {
       this.filterTags = this.tagList;
@@ -733,7 +741,6 @@ export class AddQuestionComponent implements OnInit {
       this.filterTags = this.tagList.filter(
         (course: { title: string }) => !taags.includes(course.title)
       );
-      // console.log(this.selectedTags, this.filterTags);
       this.filterTags = this.filterTags.filter((course: { title: string }) =>
         course.title
           .toLowerCase()
@@ -749,7 +756,6 @@ export class AddQuestionComponent implements OnInit {
     this.dropdownOpen = !this.dropdownOpen;
   }
   onClickedOutside(event: any) {
-    // console.log(event);
     if (event) {
       this.dropdownOpen = false;
     } else {

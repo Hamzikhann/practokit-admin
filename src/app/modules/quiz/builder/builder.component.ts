@@ -838,7 +838,8 @@ export class BuilderComponent implements OnInit {
     event.stopPropagation();
     this.selectedDifficulty.splice(index, 1);
     let newcour = {
-      label: cour,
+      label: cour.label,
+      value: cour.value,
     };
     this.filterDifficulty.push(newcour);
 
