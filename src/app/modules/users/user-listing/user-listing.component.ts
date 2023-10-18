@@ -172,16 +172,22 @@ export class UserListingComponent implements OnInit {
     const selectedCourseIds = new Set(
       this.updateUser.selectedCourses.map((course: any) => course.courseId)
     );
-
+    console.log(selectedCourseIds);
     const allCourseIds = new Set(
       this.updatedFilterCourses.map((course) => course.value)
     );
 
-    const uncommonAllCourses = this.updatedFilterCourses.filter(
-      (course) => !selectedCourseIds.has(course.courseId)
-    );
-
-    this.updatedFilterCourses = uncommonAllCourses;
+    if (selectedCourseIds.size !== 0) {
+      // console.log('hi', selectedCourseIds.size);
+      const uncommonAllCourses = this.updatedFilterCourses.filter(
+        (course) => !selectedCourseIds.has(course.courseId)
+      );
+      console.log(uncommonAllCourses);
+      this.updatedFilterCourses = uncommonAllCourses;
+    } else {
+      this.updatedFilterCourses = this.classCoursesList;
+      console.log(this.updatedFilterCourses);
+    }
   }
 
   AddUser() {

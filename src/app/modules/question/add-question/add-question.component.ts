@@ -177,6 +177,7 @@ export class AddQuestionComponent implements OnInit {
       this.time = question.duration;
       this.hintFile = question.questionsAttribute?.hintFile;
       this.questionFile = question.questionsAttribute?.statementImage;
+      console.log(question);
       if (this.typeTitle == 'MCQ') {
         this.optionsArray = [];
         question.questionsOptions.forEach(
